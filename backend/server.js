@@ -1,0 +1,72 @@
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+const cors = require('cors');
+
+const authRoutes = require('./routes/auth');
+const modelRoutes = require('./routes/models');
+const versionRoutes = require('./routes/versions');
+const approvalRoutes = require('./routes/approvals');
+const complianceRoutes = require('./routes/compliance');
+const monitoringRoutes = require('./routes/monitoring');
+const auditRoutes = require('./routes/audit');
+
+const app = express();
+
+app.use(
+  cors({
+    origin: [
+      'http://localhost:5173',
+      'http://localhost:5174',
+      'http://localhost:3000',
+    ],
+    credentials: true,
+  })
+);
+app.use(express.json());
+
+const dbCheck = (req, res, next) => {
+  if (mongoose.connection.readyState !== 1) {
+    return res.status(503).json({ error: 'Database not connected. Check MONGODB_URI.' });
+  }
+  next();
+};
+
+app.use('/api/auth', dbCheck, authRoutes);
+app.use('/api/models', dbCheck, modelRoutes);
+app.use('/api/versions', dbCheck, versionRoutes);
+app.use('/api/approvals', dbCheck, approvalRoutes);
+app.use('/api/compliance', dbCheck, complianceRoutes);
+app.use('/api/monitoring', dbCheck, monitoringRoutes);
+app.use('/api/audit', dbCheck, auditRoutes);
+
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    service: 'ai-governance',
+    db: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// error handler
+app.use((err, req, res, next) => {
+  console.error(err.message);
+  res.status(err.status || 500).json({ error: err.message || 'Server error' });
+});
+
+const PORT = parseInt(process.env.PORT) || 4010;
+app.listen(PORT, () => console.log(`AI Governance backend running on port ${PORT}`));
+
+async function connectDB() {
+  try {
+    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/ai-governance', {
+      serverSelectionTimeoutMS: 8000,
+    });
+    console.log('Connected to MongoDB');
+  } catch (err) {
+    console.error('MongoDB connection failed:', err.message);
+    console.error('Routes requiring the database will return 503 until it is reachable.');
+  }
+}
+connectDB();
