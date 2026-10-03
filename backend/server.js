@@ -13,17 +13,27 @@ const auditRoutes = require('./routes/audit');
 
 const app = express();
 
+app.use(express.json());
+
+// CORS: localhost origins are always allowed (development).
+// Extra production origins come from the CORS_ORIGINS env var (comma-separated).
+const allowedOrigins = (process.env.CORS_ORIGINS || '')
+  .split(',')
+  .map((s) => s.trim())
+  .filter(Boolean);
+
 app.use(
   cors({
     origin: [
+      ...allowedOrigins,
       'http://localhost:5173',
       'http://localhost:5174',
+      'http://localhost:5180',
       'http://localhost:3000',
     ],
     credentials: true,
   })
 );
-app.use(express.json());
 
 const dbCheck = (req, res, next) => {
   if (mongoose.connection.readyState !== 1) {
