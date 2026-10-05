@@ -4,6 +4,11 @@ const User = require('../models/User');
 const { auth, signToken, asyncHandler } = require('../middleware/auth');
 const { audit } = require('../services/audit');
 
+// Roles a new account may self-assign. 'admin' is deliberately excluded so that
+// public registration cannot mint a privileged account; elevated roles are granted
+// only by an existing admin via PATCH /api/auth/users/:id/role.
+const SELF_SERVICE_ROLES = ['model_owner', 'reviewer', 'auditor', 'viewer'];
+
 router.post(
   '/register',
   asyncHandler(async (req, res) => {
@@ -11,9 +16,15 @@ router.post(
     if (!name || !email || !password) {
       return res.status(400).json({ error: 'name, email and password are required' });
     }
+    const requestedRole = role === undefined || role === null || role === '' ? 'viewer' : role;
+    if (!SELF_SERVICE_ROLES.includes(requestedRole)) {
+      return res.status(403).json({
+        error: 'That role cannot be self-assigned. Register as a viewer and ask an admin to grant elevated access.',
+      });
+    }
     const exists = await User.findOne({ email: email.toLowerCase() });
     if (exists) return res.status(409).json({ error: 'Email already registered' });
-    const user = await User.create({ name, email, password, role });
+    const user = await User.create({ name, email, password, role: requestedRole });
     await audit(req, 'user.register', 'user', user._id, user.email, { role: user.role });
     res.status(201).json({
       token: signToken(user),

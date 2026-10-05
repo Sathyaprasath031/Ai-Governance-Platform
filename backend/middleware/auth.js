@@ -1,10 +1,20 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+// In production a real secret is mandatory - never fall back to a known value.
+function jwtSecret() {
+  const secret = process.env.JWT_SECRET;
+  if (secret) return secret;
+  if (process.env.NODE_ENV === 'production') {
+    throw new Error('JWT_SECRET must be set when NODE_ENV=production');
+  }
+  return 'dev-secret';
+}
+
 function signToken(user) {
   return jwt.sign(
     { userId: user._id, role: user.role },
-    process.env.JWT_SECRET || 'dev-secret',
+    jwtSecret(),
     { expiresIn: '12h' }
   );
 }
@@ -13,7 +23,7 @@ const auth = async (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     if (!token) return res.status(401).json({ error: 'Authentication required' });
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'dev-secret');
+    const decoded = jwt.verify(token, jwtSecret());
     const user = await User.findById(decoded.userId);
     if (!user || !user.active) return res.status(401).json({ error: 'User not found or inactive' });
     req.user = user;

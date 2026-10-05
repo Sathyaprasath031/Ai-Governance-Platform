@@ -65,6 +65,12 @@ app.use((err, req, res, next) => {
   res.status(err.status || 500).json({ error: err.message || 'Server error' });
 });
 
+// Fail fast rather than signing tokens with a known development secret.
+if (process.env.NODE_ENV === 'production' && !process.env.JWT_SECRET) {
+  console.error('FATAL: JWT_SECRET must be set in production. Refusing to start.');
+  process.exit(1);
+}
+
 const PORT = parseInt(process.env.PORT) || 4010;
 app.listen(PORT, () => console.log(`AI Governance backend running on port ${PORT}`));
 
