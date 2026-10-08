@@ -19,8 +19,10 @@ app.use(express.json());
 // Extra production origins come from the CORS_ORIGINS env var (comma-separated).
 const allowedOrigins = (process.env.CORS_ORIGINS || '')
   .split(',')
-  .map((s) => s.trim())
+  .map((s) => s.trim().replace(/\/+$/, '')) // tolerate a trailing slash in the config
   .filter(Boolean);
+
+console.log(`CORS origins enabled: ${allowedOrigins.join(', ') || '(none configured)'}`);
 
 app.use(
   cors({
@@ -57,6 +59,31 @@ app.get('/api/health', (req, res) => {
     db: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
     timestamp: new Date().toISOString(),
   });
+});
+
+// Root route: Express 404s on `/` by default, which reads as a broken deploy
+// (and fails Render's default health check path of `/`).
+app.get('/', (req, res) => {
+  res.json({
+    service: 'ai-governance-api',
+    status: 'ok',
+    health: '/api/health',
+    endpoints: [
+      '/api/auth',
+      '/api/models',
+      '/api/versions',
+      '/api/approvals',
+      '/api/compliance',
+      '/api/monitoring',
+      '/api/audit',
+    ],
+    db: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+  });
+});
+
+// Unknown routes get JSON instead of Express' HTML 404.
+app.use((req, res) => {
+  res.status(404).json({ error: `Not found: ${req.method} ${req.originalUrl}` });
 });
 
 // error handler
