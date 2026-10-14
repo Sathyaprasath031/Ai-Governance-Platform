@@ -144,41 +144,49 @@ export default function Dashboard() {
 
       {/* Role-Specific Active Workspace Banner */}
       {user && (
-        <div className="relative overflow-hidden rounded-2xl border border-brand-200 dark:border-brand-500/25 bg-gradient-to-r from-brand-50/80 via-purple-50/40 to-fuchsia-50/80 dark:from-brand-950/40 dark:via-white/[0.03] dark:to-fuchsia-950/20 p-5 shadow-sm dark:shadow-none backdrop-blur-md">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-start gap-3.5">
-              <span className={`mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-xl border ${currentRole.badge}`}>
-                <RoleIcon size={20} />
+        <div className="card-glass relative overflow-hidden rounded-2xl p-6 sm:p-7">
+          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-start gap-4">
+              <span className="mt-0.5 grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-brand-600 to-fuchsia-600 text-white shadow-glow-sm">
+                <RoleIcon size={24} />
               </span>
               <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-base font-bold text-slate-900 dark:text-white">Your Workspace Role: {currentRole.title}</h2>
-                  <span className="text-xs text-slate-600 dark:text-slate-400">({user.name})</span>
+                <div className="flex flex-wrap items-center gap-2.5">
+                  <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">
+                    Your Workspace Role: {currentRole.title}
+                  </h2>
+                  <span className="rounded-full border border-brand-200 bg-brand-50 px-2.5 py-0.5 text-xs font-bold text-brand-800 dark:border-brand-500/30 dark:bg-brand-500/20 dark:text-brand-300">
+                    {user.name}
+                  </span>
                 </div>
-                <p className="mt-1 text-xs leading-relaxed text-slate-700 dark:text-slate-300">{currentRole.summary}</p>
-                <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-                  <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">Key Focus:</span>
-                  <span className="rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-medium text-slate-800 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-slate-300 shadow-sm dark:shadow-none">
+                <p className="mt-1.5 text-sm sm:text-base font-medium leading-relaxed text-slate-800 dark:text-slate-100 max-w-3xl">
+                  {currentRole.summary}
+                </p>
+                <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-400">
+                    Key Focus:
+                  </span>
+                  <span className="rounded-xl border border-slate-300/80 bg-white/90 px-3 py-1 text-xs sm:text-sm font-semibold text-slate-900 shadow-sm dark:border-white/15 dark:bg-white/[0.08] dark:text-white backdrop-blur-md">
                     {currentRole.focus}
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="flex shrink-0 flex-wrap items-center gap-2">
+            <div className="flex shrink-0 flex-wrap items-center gap-2.5">
               {can.manage && (
-                <Link to="/models" className="btn-primary !py-1.5 !text-xs">
-                  <Boxes size={14} /> Register Model
+                <Link to="/models" className="btn-primary !px-4 !py-2 !text-sm">
+                  <Boxes size={16} /> Register Model
                 </Link>
               )}
               {can.review && (
-                <Link to="/approvals" className="btn-secondary !py-1.5 !text-xs">
-                  <ClipboardCheck size={14} /> Review Queue ({approvals.length})
+                <Link to="/approvals" className="btn-secondary !px-4 !py-2 !text-sm">
+                  <ClipboardCheck size={16} /> Review Queue ({approvals.length})
                 </Link>
               )}
               {can.audit && (
-                <Link to="/audit" className="btn-secondary !py-1.5 !text-xs">
-                  <Activity size={14} /> Audit Trail
+                <Link to="/audit" className="btn-secondary !px-4 !py-2 !text-sm">
+                  <Activity size={16} /> Audit Trail
                 </Link>
               )}
             </div>
