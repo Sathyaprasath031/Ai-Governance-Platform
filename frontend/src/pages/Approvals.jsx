@@ -96,23 +96,24 @@ export default function Approvals() {
       {/* Glassmorphic Approvals List */}
       <div className="space-y-4">
         {approvals.map((a) => (
-          <div key={a._id} className="card-glass card-hover group p-5 sm:p-6">
-            <div className="mb-3 flex flex-wrap items-center gap-3">
-              <span className="rounded-lg border border-brand-200/90 bg-white/70 px-2.5 py-1 font-mono text-sm font-bold text-brand-700 dark:border-brand-500/25 dark:bg-brand-500/10 dark:text-brand-300 backdrop-blur-sm">
-                v{a.version?.version}
-              </span>
-              <RiskBadge tier={a.riskTier} />
-              <span className="text-xs text-slate-600 dark:text-slate-400">
-                requested by <span className="font-semibold text-slate-900 dark:text-slate-200">{a.requestedBy?.name || 'unknown'}</span> ·{' '}
-                <span className="font-semibold tabular-nums text-slate-900 dark:text-slate-200">{a.approvals.length}/{a.requiredApprovals}</span> approvals
-              </span>
-              <div className="flex-1" />
+          <div key={a._id} className="card-glass card-hover group p-4 sm:p-6">
+            <div className="mb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <span className="rounded-lg border border-brand-200/90 bg-white/70 px-2.5 py-1 font-mono text-sm font-bold text-brand-700 dark:border-brand-500/25 dark:bg-brand-500/10 dark:text-brand-300 backdrop-blur-sm">
+                  v{a.version?.version}
+                </span>
+                <RiskBadge tier={a.riskTier} />
+                <span className="text-xs text-slate-600 dark:text-slate-400">
+                  requested by <span className="font-semibold text-slate-900 dark:text-slate-200">{a.requestedBy?.name || 'unknown'}</span> ·{' '}
+                  <span className="font-semibold tabular-nums text-slate-900 dark:text-slate-200">{a.approvals.length}/{a.requiredApprovals}</span> approvals
+                </span>
+              </div>
               {can.review && (
-                <div className="flex gap-2">
-                  <button className="btn-success" onClick={() => decide(a._id, 'approved')}>
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <button className="btn-success flex-1 sm:flex-initial" onClick={() => decide(a._id, 'approved')}>
                     <CheckCircle2 size={15} /> Approve
                   </button>
-                  <button className="btn-danger" onClick={() => decide(a._id, 'rejected')}>
+                  <button className="btn-danger flex-1 sm:flex-initial" onClick={() => decide(a._id, 'rejected')}>
                     <XCircle size={15} /> Reject
                   </button>
                 </div>
@@ -159,7 +160,7 @@ export default function Approvals() {
       {/* Bottom 2 Glassmorphic Cards: Workflow Pipeline & Requirements */}
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         {/* LEFT: Approval Workflow */}
-        <div className="card-glass p-5 sm:p-6">
+        <div className="card-glass p-4 sm:p-6">
           <h3 className="card-title mb-4 text-sm font-semibold text-slate-900 dark:text-slate-200">
             Approval Workflow Pipeline
           </h3>
@@ -191,7 +192,7 @@ export default function Approvals() {
         </div>
 
         {/* RIGHT: Approval Requirements by Risk */}
-        <div className="card-glass p-5 sm:p-6 flex flex-col justify-between">
+        <div className="card-glass p-4 sm:p-6 flex flex-col justify-between">
           <div>
             <h3 className="card-title mb-4 text-sm font-semibold text-slate-900 dark:text-slate-200">
               Approval Requirements by Risk Tier

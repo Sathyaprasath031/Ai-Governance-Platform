@@ -87,7 +87,7 @@ export default function Register() {
 
       <div className="grid gap-6 lg:grid-cols-12">
         {/* Form panel */}
-        <div className="card p-6 sm:p-8 lg:col-span-5">
+        <div className="card p-5 sm:p-8 lg:col-span-5">
           <div className="flex items-center gap-3">
             <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-brand-600 to-fuchsia-600 shadow-glow-sm text-white">
               <ShieldCheck size={20} className="text-white" />

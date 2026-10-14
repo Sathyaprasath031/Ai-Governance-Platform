@@ -86,22 +86,22 @@ export default function Navbar() {
         )}
 
         <button
-          className="btn-secondary shrink-0 !px-2.5"
+          className="btn-secondary shrink-0 h-9 w-9 sm:h-10 sm:w-10 !p-0 grid place-items-center"
           onClick={toggleTheme}
           title={dark ? 'Switch to light mode' : 'Switch to dark mode'}
           aria-label="Toggle color theme"
         >
-          {dark ? <Sun size={16} /> : <Moon size={16} />}
+          {dark ? <Sun size={17} /> : <Moon size={17} />}
         </button>
 
         {/* Hamburger (mobile only) */}
         <button
-          className="btn-secondary shrink-0 !px-2.5 md:hidden"
+          className="btn-secondary shrink-0 h-9 w-9 !p-0 grid place-items-center md:hidden"
           onClick={() => setOpen(!open)}
           aria-label="Toggle menu"
           aria-expanded={open}
         >
-          {open ? <X size={16} /> : <Menu size={16} />}
+          {open ? <X size={17} /> : <Menu size={17} />}
         </button>
       </div>
 

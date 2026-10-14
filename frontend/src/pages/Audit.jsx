@@ -30,13 +30,13 @@ export default function Audit() {
 
   return (
     <div className="flex min-h-[calc(100vh-10rem)] flex-col space-y-5">
-      <div className="flex flex-wrap items-end justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
           <p className="eyebrow">Compliance</p>
           <h1 className="page-title">Audit Trail</h1>
           <p className="page-sub">Immutable log of every governance action — who, what, when.</p>
         </div>
-        <select className="input w-36" value={limit} onChange={(e) => setLimit(Number(e.target.value))}>
+        <select className="input w-full sm:w-36" value={limit} onChange={(e) => setLimit(Number(e.target.value))}>
           {[50, 100, 250, 500].map((n) => (
             <option key={n} value={n}>{n} entries</option>
           ))}
@@ -46,17 +46,19 @@ export default function Audit() {
       {error && <div className="alert-error">{error}</div>}
 
       <div className="card divide-y divide-slate-200 dark:divide-white/[0.06]">
-        {entries.length === 0 && !error && <p className="p-5 text-sm text-slate-600 dark:text-slate-400">No audit entries.</p>}
+        {entries.length === 0 && !error && <p className="p-4 sm:p-5 text-sm text-slate-600 dark:text-slate-400">No audit entries.</p>}
         {entries.map((e) => (
-          <div key={e._id} className="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-4 py-3 text-sm transition-colors hover:bg-slate-100/70 dark:hover:bg-white/[0.03]">
-            <span className="w-full font-mono text-[11px] text-slate-500 dark:text-slate-400 sm:w-40 sm:shrink-0">
+          <div key={e._id} className="flex flex-col sm:flex-row sm:items-baseline gap-1.5 sm:gap-x-3 px-3.5 sm:px-4 py-2.5 sm:py-3 text-sm transition-colors hover:bg-slate-100/70 dark:hover:bg-white/[0.03]">
+            <span className="font-mono text-[11px] text-slate-500 dark:text-slate-400 sm:w-40 sm:shrink-0">
               {new Date(e.createdAt).toLocaleString()}
             </span>
-            <span className="w-full truncate font-semibold text-slate-900 dark:text-slate-200 sm:w-36 sm:shrink-0">{e.actorName}</span>
-            <span className={`badge ${ACTION_COLORS[e.action] || 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-400/10 dark:text-slate-300 dark:border-slate-400/20'}`}>
-              {e.action}
-            </span>
-            <span className="text-slate-700 dark:text-slate-400">{e.targetLabel}</span>
+            <div className="flex flex-wrap items-center gap-2 flex-1 min-w-0">
+              <span className="font-semibold text-slate-900 dark:text-slate-200 sm:w-32 sm:shrink-0 sm:truncate">{e.actorName}</span>
+              <span className={`badge ${ACTION_COLORS[e.action] || 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-400/10 dark:text-slate-300 dark:border-slate-400/20'}`}>
+                {e.action}
+              </span>
+              <span className="text-xs sm:text-sm text-slate-700 dark:text-slate-400 break-words">{e.targetLabel}</span>
+            </div>
           </div>
         ))}
       </div>
@@ -65,7 +67,7 @@ export default function Audit() {
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         {/* Tracked Actions */}
-        <div className="rounded-2xl border border-slate-200 bg-white/80 dark:border-white/[0.06] dark:bg-white/[0.03] px-5 py-5 backdrop-blur-sm shadow-sm dark:shadow-none">
+        <div className="card p-4 sm:p-5">
           <h2 className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-200">Tracked Actions</h2>
           <div className="space-y-2">
             {ACTION_DEFINITIONS.map(({ action, desc }) => (
@@ -80,7 +82,7 @@ export default function Audit() {
         </div>
 
         {/* Why Immutable Audit? */}
-        <div className="rounded-2xl border border-slate-200 bg-white/80 dark:border-white/[0.06] dark:bg-white/[0.03] px-5 py-5 backdrop-blur-sm shadow-sm dark:shadow-none">
+        <div className="card p-4 sm:p-5">
           <h2 className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-200">Why Immutable Audit?</h2>
           <div className="space-y-3">
             <div className="flex gap-2.5 text-sm text-slate-700 dark:text-slate-400">

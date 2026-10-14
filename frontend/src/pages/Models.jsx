@@ -90,14 +90,14 @@ export default function Models() {
   return (
     <div className="flex min-h-[calc(100vh-10rem)] flex-col space-y-6">
       {/* Header */}
-      <div className="flex flex-wrap items-end justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
           <p className="eyebrow">Registry</p>
           <h1 className="page-title">Model Registry</h1>
           <p className="page-sub">Every AI system under governance, with its current lifecycle state.</p>
         </div>
         {can.manage && (
-          <button className="btn-primary" onClick={() => setShow(!show)}>
+          <button className="btn-primary w-full sm:w-auto justify-center" onClick={() => setShow(!show)}>
             {show ? <><X size={15} /> Cancel</> : <><Plus size={16} /> Register model</>}
           </button>
         )}
@@ -107,7 +107,7 @@ export default function Models() {
 
       {/* Glassmorphic Registration Drawer/Card */}
       {show && (
-        <form onSubmit={submit} className="card-glass fade-up space-y-4 p-6 sm:p-7">
+        <form onSubmit={submit} className="card-glass fade-up space-y-4 p-4 sm:p-6 lg:p-7">
           <div className="flex items-center gap-2.5">
             <span className="grid h-8 w-8 place-items-center rounded-xl bg-gradient-to-br from-brand-600 to-fuchsia-600 text-white shadow-glow-sm">
               <Plus size={16} />
@@ -141,7 +141,7 @@ export default function Models() {
                 <option key={d} value={d}>{d.replace('_', ' ')}</option>
               ))}
             </select>
-            <label className="flex items-center gap-2.5 rounded-xl border border-slate-200/90 dark:border-white/10 bg-white/70 dark:bg-white/[0.04] px-3.5 text-sm text-slate-800 dark:text-slate-300 backdrop-blur-sm">
+            <label className="flex items-center gap-2.5 rounded-xl border border-slate-200/90 dark:border-white/10 bg-white/70 dark:bg-white/[0.04] px-3.5 py-2 sm:py-0 text-sm text-slate-800 dark:text-slate-300 backdrop-blur-sm">
               <input
                 type="checkbox"
                 className="h-4 w-4 accent-brand-600 rounded"
@@ -165,21 +165,21 @@ export default function Models() {
             value={form.intendedUse}
             onChange={(e) => setForm({ ...form, intendedUse: e.target.value })}
           />
-          <div className="flex justify-end gap-2.5 pt-1">
-            <button type="button" className="btn-secondary" onClick={() => setShow(false)}>Cancel</button>
-            <button className="btn-primary" disabled={busy}>Register Model</button>
+          <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-2.5 pt-1">
+            <button type="button" className="btn-secondary w-full sm:w-auto" onClick={() => setShow(false)}>Cancel</button>
+            <button className="btn-primary w-full sm:w-auto" disabled={busy}>Register Model</button>
           </div>
         </form>
       )}
 
       {/* Glassmorphic Filter & Search Bar */}
-      <div className="card-glass flex flex-col gap-3 p-3.5 sm:flex-row sm:items-center sm:justify-between">
+      <div className="card-glass flex flex-col gap-3 p-3 sm:p-4">
         {/* Search Input */}
-        <div className="relative flex-1">
+        <div className="relative w-full">
           <Search size={15} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
           <input
             type="text"
-            className="w-full rounded-xl border border-slate-200/90 bg-white/70 pl-9 pr-3.5 py-1.5 text-xs text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-100 dark:placeholder:text-slate-500 backdrop-blur-sm transition-colors"
+            className="w-full rounded-xl border border-slate-200/90 bg-white/70 pl-9 pr-3.5 py-2 text-xs sm:text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-500 focus:outline-none focus:ring-2 focus:ring-brand-500/20 dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-100 dark:placeholder:text-slate-500 backdrop-blur-sm transition-colors"
             placeholder="Filter models by name, owner, or description..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -194,12 +194,12 @@ export default function Models() {
           )}
         </div>
 
-        {/* Domain Filter Pills */}
-        <div className="flex flex-wrap items-center gap-1.5">
-          <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 hidden lg:inline mr-1">Domain:</span>
+        {/* Domain Filter Pills: horizontally scrollable on mobile, wrap on desktop */}
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1 -mx-1 px-1 sm:mx-0 sm:px-0 sm:flex-wrap">
+          <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400 hidden lg:inline mr-1 shrink-0">Domain:</span>
           <button
             onClick={() => setDomainFilter('all')}
-            className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition-all ${
+            className={`shrink-0 rounded-lg px-2.5 py-1 text-xs font-semibold transition-all ${
               domainFilter === 'all'
                 ? 'bg-brand-600 text-white shadow-sm'
                 : 'border border-slate-200/80 bg-white/60 text-slate-700 hover:bg-white dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 dark:hover:bg-white/[0.08]'
@@ -214,7 +214,7 @@ export default function Models() {
               <button
                 key={d.key}
                 onClick={() => setDomainFilter(domainFilter === d.key ? 'all' : d.key)}
-                className={`inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium transition-all ${
+                className={`shrink-0 inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-medium transition-all ${
                   domainFilter === d.key
                     ? 'bg-brand-600 text-white shadow-sm'
                     : 'border border-slate-200/80 bg-white/60 text-slate-700 hover:bg-white dark:border-white/10 dark:bg-white/[0.04] dark:text-slate-300 dark:hover:bg-white/[0.08]'
@@ -238,7 +238,7 @@ export default function Models() {
             <Link
               key={m._id}
               to={`/models/${m._id}`}
-              className="card-glass card-hover group relative flex flex-col justify-between p-5"
+              className="card-glass card-hover group relative flex flex-col justify-between p-4 sm:p-5"
             >
               {/* Card top: Name & Risk tier */}
               <div>
@@ -332,7 +332,7 @@ export default function Models() {
       {/* Bottom 3 Glassmorphic Information Cards */}
       <div className="mt-6 grid gap-4 lg:grid-cols-3">
         {/* Card 1: Model Lifecycle */}
-        <div className="card-glass p-5 flex flex-col justify-between">
+        <div className="card-glass p-4 sm:p-5 flex flex-col justify-between">
           <div>
             <h3 className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-200">Model Lifecycle Pipeline</h3>
             <div className="flex flex-wrap items-center gap-1.5 py-1">
@@ -355,7 +355,7 @@ export default function Models() {
         </div>
 
         {/* Card 2: Supported Domains */}
-        <div className="card-glass p-5 flex flex-col justify-between">
+        <div className="card-glass p-4 sm:p-5 flex flex-col justify-between">
           <div>
             <h3 className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-200">Supported Domains</h3>
             <div className="flex flex-wrap gap-2">
@@ -379,7 +379,7 @@ export default function Models() {
         </div>
 
         {/* Card 3: Governance Tips */}
-        <div className="card-glass p-5 flex flex-col justify-between">
+        <div className="card-glass p-4 sm:p-5 flex flex-col justify-between">
           <div>
             <h3 className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-200">Governance Tips</h3>
             <div className="space-y-2">

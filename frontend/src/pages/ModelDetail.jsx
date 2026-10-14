@@ -62,9 +62,9 @@ export default function ModelDetail() {
         <ArrowLeft size={14} /> Registry
       </Link>
 
-      <div className="flex flex-wrap items-start justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
         <div>
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
             <h1 className="page-title">{model.name}</h1>
             <RiskBadge tier={model.riskTier} />
             {model.regulated && (
@@ -73,14 +73,14 @@ export default function ModelDetail() {
               </span>
             )}
           </div>
-          <p className="mt-1.5 max-w-2xl text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{model.description}</p>
+          <p className="mt-1.5 max-w-2xl text-xs sm:text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{model.description}</p>
           {model.intendedUse && (
             <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
               <span className="font-semibold text-slate-800 dark:text-slate-300">Intended use:</span> {model.intendedUse}
             </p>
           )}
         </div>
-        <div className="text-sm text-slate-600 dark:text-slate-400">
+        <div className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
           Owner: <span className="font-semibold text-slate-900 dark:text-slate-200">{model.ownerName}</span>
         </div>
       </div>
@@ -90,9 +90,9 @@ export default function ModelDetail() {
 
       {/* New version */}
       {isOwner && (
-        <div className="card p-5">
+        <div className="card p-4 sm:p-5">
           <button
-            className="btn-secondary"
+            className="btn-secondary w-full sm:w-auto"
             onClick={() => setNewVersion(newVersion ? null : { version: '', changelog: '', trainingDataset: '', algorithm: '', metrics: { accuracy: '', auc: '' }, fairness: [] })}
           >
             + New version
@@ -120,14 +120,14 @@ export default function ModelDetail() {
                 } catch (err) { setError(err.message); }
               }}
             >
-              <div className="grid gap-3.5 md:grid-cols-4">
+              <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
                 <input className="input" placeholder="Version (e.g. 2.4.0)" value={newVersion.version} onChange={(e) => setNewVersion({ ...newVersion, version: e.target.value })} required />
                 <input className="input" placeholder="Algorithm" value={newVersion.algorithm} onChange={(e) => setNewVersion({ ...newVersion, algorithm: e.target.value })} />
                 <input className="input" placeholder="Training dataset" value={newVersion.trainingDataset} onChange={(e) => setNewVersion({ ...newVersion, trainingDataset: e.target.value })} />
                 <input className="input" placeholder="Accuracy (0-1)" type="number" step="0.001" value={newVersion.metrics.accuracy} onChange={(e) => setNewVersion({ ...newVersion, metrics: { ...newVersion.metrics, accuracy: e.target.value } })} />
               </div>
               <textarea className="input" rows={2} placeholder="Changelog" value={newVersion.changelog} onChange={(e) => setNewVersion({ ...newVersion, changelog: e.target.value })} />
-              <button className="btn-primary">Create draft</button>
+              <button className="btn-primary w-full sm:w-auto">Create draft</button>
             </form>
           )}
         </div>
@@ -159,14 +159,14 @@ export default function ModelDetail() {
 
       {/* Deployments */}
       {deployments?.length > 0 && (
-        <div className="card p-5">
+        <div className="card p-4 sm:p-5">
           <h2 className="card-title mb-3">Deployment history</h2>
           <div className="space-y-1.5 text-sm">
             {deployments.map((d) => (
-              <div key={d._id} className="flex flex-wrap gap-x-2 gap-y-0.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-slate-100/70 dark:hover:bg-white/[0.03]">
-                <span className="w-full font-mono text-[11px] text-slate-500 dark:text-slate-400 sm:w-40 sm:shrink-0">{new Date(d.createdAt).toLocaleString()}</span>
-                <span className="font-semibold text-slate-900 dark:text-slate-200">{d.environment}</span>
-                <span className="text-slate-600 dark:text-slate-400">
+              <div key={d._id} className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-x-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-slate-100/70 dark:hover:bg-white/[0.03]">
+                <span className="font-mono text-[11px] text-slate-500 dark:text-slate-400 sm:w-40 sm:shrink-0">{new Date(d.createdAt).toLocaleString()}</span>
+                <span className="font-semibold text-slate-900 dark:text-slate-200 sm:w-28 sm:shrink-0">{d.environment}</span>
+                <span className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
                   by {d.deployerName} {d.active ? '· active' : '· superseded'}
                 </span>
               </div>
@@ -183,27 +183,30 @@ function VersionCard({ v, model, user, isOwner, canReview, onSubmit, onAct, comp
   const toggle = () => { setOpen(!open); if (!open) onOpenDetails(); };
 
   return (
-    <div className="card p-5">
-      <div className="flex flex-wrap items-center gap-3">
-        <span className="rounded-lg border border-brand-200 bg-brand-50 text-brand-700 dark:border-white/10 dark:bg-white/[0.05] dark:text-brand-300 px-2.5 py-1 font-mono text-sm font-semibold">
-          v{v.version}
-        </span>
-        <StatusBadge status={v.status} />
-        <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{v.algorithm}</span>
-        <div className="flex-1" />
-        <button className="btn-secondary" onClick={toggle}>{open ? 'Hide' : 'Details'}</button>
-        {isOwner && v.status === 'draft' && (
-          <button className="btn-primary" onClick={onSubmit}><Send size={14} /> Submit for review</button>
-        )}
-        {canReview && v.status === 'pending_review' && (
-          <Link to="/approvals" className="btn-primary">Review queue</Link>
-        )}
-        {isOwner && v.status === 'approved' && (
-          <button className="btn-success" onClick={() => onAct('deployed')}><Rocket size={14} /> Deploy</button>
-        )}
-        {isOwner && ['deployed', 'approved'].includes(v.status) && (
-          <button className="btn-secondary" onClick={() => onAct('deprecated')}><Archive size={14} /> Deprecate</button>
-        )}
+    <div className="card p-4 sm:p-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <span className="rounded-lg border border-brand-200 bg-brand-50 text-brand-700 dark:border-white/10 dark:bg-white/[0.05] dark:text-brand-300 px-2.5 py-1 font-mono text-sm font-semibold">
+            v{v.version}
+          </span>
+          <StatusBadge status={v.status} />
+          {v.algorithm && <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{v.algorithm}</span>}
+        </div>
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <button className="btn-secondary flex-1 sm:flex-initial" onClick={toggle}>{open ? 'Hide' : 'Details'}</button>
+          {isOwner && v.status === 'draft' && (
+            <button className="btn-primary flex-1 sm:flex-initial" onClick={onSubmit}><Send size={14} /> Submit</button>
+          )}
+          {canReview && v.status === 'pending_review' && (
+            <Link to="/approvals" className="btn-primary flex-1 sm:flex-initial text-center">Review queue</Link>
+          )}
+          {isOwner && v.status === 'approved' && (
+            <button className="btn-success flex-1 sm:flex-initial" onClick={() => onAct('deployed')}><Rocket size={14} /> Deploy</button>
+          )}
+          {isOwner && ['deployed', 'approved'].includes(v.status) && (
+            <button className="btn-secondary flex-1 sm:flex-initial" onClick={() => onAct('deprecated')}><Archive size={14} /> Deprecate</button>
+          )}
+        </div>
       </div>
 
       {v.changelog && <p className="mt-2.5 text-sm text-slate-700 dark:text-slate-400 leading-relaxed">{v.changelog}</p>}

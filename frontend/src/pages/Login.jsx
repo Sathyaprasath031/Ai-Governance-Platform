@@ -112,7 +112,7 @@ export default function Login() {
         </div>
 
         {/* Form panel */}
-        <div className="flex flex-col justify-center bg-white/80 dark:bg-white/[0.04] p-8 sm:p-10 lg:p-12">
+        <div className="flex flex-col justify-center bg-white/80 dark:bg-white/[0.04] p-5 sm:p-10 lg:p-12">
           <h1 className="text-xl font-bold text-slate-900 dark:text-white">Sign in</h1>
           <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">AI Model Governance Platform</p>
           {error && <div className="alert-error mt-4">{error}</div>}
@@ -177,7 +177,7 @@ export default function Login() {
         </div>
 
         {/* Bottom Trust Bar */}
-        <div className="mt-10 flex flex-wrap items-center justify-center gap-6 rounded-2xl border border-slate-200/90 dark:border-white/[0.08] bg-white/80 dark:bg-white/[0.04] px-6 py-4 text-xs font-semibold text-slate-700 dark:text-slate-300 backdrop-blur-sm sm:gap-10">
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-4 sm:gap-10 rounded-2xl border border-slate-200/90 dark:border-white/[0.08] bg-white/80 dark:bg-white/[0.04] px-4 py-3 sm:px-6 sm:py-4 text-xs font-semibold text-slate-700 dark:text-slate-300 backdrop-blur-sm">
           <div className="flex items-center gap-2">
             <Lock size={15} className="text-brand-600 dark:text-brand-400" />
             <span>SOC 2 Ready</span>

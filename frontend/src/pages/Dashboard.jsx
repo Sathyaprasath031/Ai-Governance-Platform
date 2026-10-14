@@ -125,14 +125,14 @@ export default function Dashboard() {
   return (
     <div className="flex min-h-[calc(100vh-10rem)] flex-col space-y-6">
       {/* Header */}
-      <div className="flex flex-wrap items-end justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
         <div>
           <p className="eyebrow">Overview</p>
           <h1 className="page-title">Governance Overview</h1>
           <p className="page-sub">Lifecycle state, approvals and risk across your AI estate.</p>
         </div>
         {user && (
-          <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white/90 dark:border-white/10 dark:bg-white/[0.04] px-3.5 py-1.5 shadow-sm dark:shadow-none backdrop-blur-sm">
+          <div className="flex self-start sm:self-auto items-center gap-2 rounded-xl border border-slate-200 bg-white/90 dark:border-white/10 dark:bg-white/[0.04] px-3.5 py-1.5 shadow-sm dark:shadow-none backdrop-blur-sm">
             <span className="text-xs text-slate-600 dark:text-slate-400">Signed in as:</span>
             <span className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-0.5 text-xs font-semibold ${currentRole.badge}`}>
               <RoleIcon size={13} />
@@ -144,49 +144,50 @@ export default function Dashboard() {
 
       {/* Role-Specific Active Workspace Banner */}
       {user && (
-        <div className="card-glass relative overflow-hidden rounded-2xl p-6 sm:p-7">
-          <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-start gap-4">
-              <span className="mt-0.5 grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-brand-600 to-fuchsia-600 text-white shadow-glow-sm">
-                <RoleIcon size={24} />
+        <div className="card-glass relative overflow-hidden rounded-2xl p-4 sm:p-6 lg:p-7">
+          <div className="flex flex-col gap-4 sm:gap-5 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-start gap-3 sm:gap-4">
+              <span className="mt-0.5 grid h-10 w-10 sm:h-12 sm:w-12 shrink-0 place-items-center rounded-2xl bg-gradient-to-br from-brand-600 to-fuchsia-600 text-white shadow-glow-sm">
+                <RoleIcon size={20} className="sm:hidden" />
+                <RoleIcon size={24} className="hidden sm:block" />
               </span>
-              <div>
-                <div className="flex flex-wrap items-center gap-2.5">
-                  <h2 className="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">
+              <div className="min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h2 className="text-base sm:text-xl font-extrabold text-slate-900 dark:text-white">
                     Your Workspace Role: {currentRole.title}
                   </h2>
-                  <span className="rounded-full border border-brand-200 bg-brand-50 px-2.5 py-0.5 text-xs font-bold text-brand-800 dark:border-brand-500/30 dark:bg-brand-500/20 dark:text-brand-300">
+                  <span className="rounded-full border border-brand-200 bg-brand-50 px-2.5 py-0.5 text-[11px] sm:text-xs font-bold text-brand-800 dark:border-brand-500/30 dark:bg-brand-500/20 dark:text-brand-300">
                     {user.name}
                   </span>
                 </div>
-                <p className="mt-1.5 text-sm sm:text-base font-medium leading-relaxed text-slate-800 dark:text-slate-100 max-w-3xl">
+                <p className="mt-1.5 text-xs sm:text-base font-medium leading-relaxed text-slate-800 dark:text-slate-100 max-w-3xl">
                   {currentRole.summary}
                 </p>
-                <div className="mt-3 flex flex-wrap items-center gap-2">
-                  <span className="text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-400">
+                <div className="mt-2.5 sm:mt-3 flex flex-wrap items-center gap-2">
+                  <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-brand-700 dark:text-brand-400">
                     Key Focus:
                   </span>
-                  <span className="rounded-xl border border-slate-300/80 bg-white/90 px-3 py-1 text-xs sm:text-sm font-semibold text-slate-900 shadow-sm dark:border-white/15 dark:bg-white/[0.08] dark:text-white backdrop-blur-md">
+                  <span className="rounded-xl border border-slate-300/80 bg-white/90 px-2.5 sm:px-3 py-0.5 sm:py-1 text-xs sm:text-sm font-semibold text-slate-900 shadow-sm dark:border-white/15 dark:bg-white/[0.08] dark:text-white backdrop-blur-md">
                     {currentRole.focus}
                   </span>
                 </div>
               </div>
             </div>
 
-            <div className="flex shrink-0 flex-wrap items-center gap-2.5">
+            <div className="flex w-full flex-col sm:w-auto sm:flex-row sm:shrink-0 items-stretch sm:items-center gap-2 sm:gap-2.5 pt-2 sm:pt-0 border-t border-slate-200/60 sm:border-0 dark:border-white/[0.06]">
               {can.manage && (
-                <Link to="/models" className="btn-primary !px-4 !py-2 !text-sm">
-                  <Boxes size={16} /> Register Model
+                <Link to="/models" className="btn-primary !px-4 !py-2 !text-xs sm:!text-sm w-full sm:w-auto justify-center">
+                  <Boxes size={15} /> Register Model
                 </Link>
               )}
               {can.review && (
-                <Link to="/approvals" className="btn-secondary !px-4 !py-2 !text-sm">
-                  <ClipboardCheck size={16} /> Review Queue ({approvals.length})
+                <Link to="/approvals" className="btn-secondary !px-4 !py-2 !text-xs sm:!text-sm w-full sm:w-auto justify-center">
+                  <ClipboardCheck size={15} /> Review Queue ({approvals.length})
                 </Link>
               )}
               {can.audit && (
-                <Link to="/audit" className="btn-secondary !px-4 !py-2 !text-sm">
-                  <Activity size={16} /> Audit Trail
+                <Link to="/audit" className="btn-secondary !px-4 !py-2 !text-xs sm:!text-sm w-full sm:w-auto justify-center">
+                  <Activity size={15} /> Audit Trail
                 </Link>
               )}
             </div>
@@ -195,17 +196,18 @@ export default function Dashboard() {
       )}
 
       {/* KPI cards */}
-      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         {kpis.map(({ label, value, icon: Icon, tint, bar }) => (
-          <div key={label} className="card card-hover group relative overflow-hidden p-4">
+          <div key={label} className="card card-hover group relative overflow-hidden p-3.5 sm:p-4">
             <div className={`absolute inset-x-0 top-0 h-[2.5px] bg-gradient-to-r ${bar} opacity-70 transition-all duration-300 group-hover:opacity-100 group-hover:shadow-[0_0_12px_rgba(139,92,246,0.6)]`} />
-            <div className="flex items-center gap-3.5">
-              <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-slate-200/80 dark:border-white/10 bg-gradient-to-br ${tint} transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3`}>
-                <Icon size={21} className="transition-transform duration-300 group-hover:scale-110" />
+            <div className="flex items-center gap-2.5 sm:gap-3.5">
+              <span className={`grid h-9 w-9 sm:h-11 sm:w-11 shrink-0 place-items-center rounded-xl border border-slate-200/80 dark:border-white/10 bg-gradient-to-br ${tint} transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3`}>
+                <Icon size={18} className="sm:hidden transition-transform duration-300 group-hover:scale-110" />
+                <Icon size={21} className="hidden sm:block transition-transform duration-300 group-hover:scale-110" />
               </span>
-              <div>
-                <div className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{value}</div>
-                <div className="text-xs font-semibold text-slate-600 dark:text-slate-400">{label}</div>
+              <div className="min-w-0">
+                <div className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-white truncate">{value}</div>
+                <div className="text-[11px] sm:text-xs font-semibold text-slate-600 dark:text-slate-400 truncate">{label}</div>
               </div>
             </div>
           </div>
@@ -214,26 +216,26 @@ export default function Dashboard() {
 
       <div className="grid gap-4 lg:grid-cols-3">
         {/* Risk distribution */}
-        <div className="card p-5 lg:col-span-2">
+        <div className="card p-4 sm:p-5 lg:col-span-2">
           <h2 className="card-title mb-4">Models by risk tier</h2>
           <div className="space-y-3.5">
             {riskCounts.map(({ tier, n }) => (
-              <div key={tier} className="flex items-center gap-3">
-                <div className="w-24 shrink-0"><RiskBadge tier={tier} /></div>
+              <div key={tier} className="flex items-center gap-2.5 sm:gap-3">
+                <div className="w-20 sm:w-24 shrink-0"><RiskBadge tier={tier} /></div>
                 <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-slate-200/80 dark:bg-white/[0.06]">
                   <div
                     className={`h-full rounded-full bg-gradient-to-r ${RISK_BAR[tier]} shadow-[0_0_12px_-2px_rgba(139,92,246,0.4)] transition-all duration-500`}
                     style={{ width: `${total ? (n / total) * 100 : 0}%` }}
                   />
                 </div>
-                <div className="w-8 shrink-0 text-right text-sm font-semibold tabular-nums text-slate-900 dark:text-slate-200">{n}</div>
+                <div className="w-8 shrink-0 text-right text-xs sm:text-sm font-semibold tabular-nums text-slate-900 dark:text-slate-200">{n}</div>
               </div>
             ))}
           </div>
         </div>
 
         {/* Pending approvals */}
-        <div className="card p-5">
+        <div className="card p-4 sm:p-5">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="card-title">Pending approvals</h2>
             <Link to="/approvals" className="link-accent inline-flex items-center gap-0.5">
@@ -262,7 +264,7 @@ export default function Dashboard() {
       </div>
 
       {canSeeAudit(user) && (
-        <div className="card p-5">
+        <div className="card p-4 sm:p-5">
           <div className="mb-3 flex items-center justify-between">
             <h2 className="card-title">Recent audit activity</h2>
             <Link to="/audit" className="link-accent inline-flex items-center gap-0.5">
@@ -272,12 +274,12 @@ export default function Dashboard() {
           <div className="space-y-1">
             {audit.length === 0 && <p className="text-sm text-slate-600 dark:text-slate-500">No activity yet.</p>}
             {audit.map((e) => (
-              <div key={e._id} className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5 rounded-lg px-2 py-1.5 text-sm transition-colors hover:bg-slate-100/70 dark:hover:bg-white/[0.04]">
-                <span className="w-full font-mono text-[11px] text-slate-500 dark:text-slate-500 sm:w-36 sm:shrink-0">
+              <div key={e._id} className="flex flex-col sm:flex-row sm:items-baseline gap-1 sm:gap-x-2.5 rounded-lg px-2 py-1.5 text-sm transition-colors hover:bg-slate-100/70 dark:hover:bg-white/[0.04]">
+                <span className="font-mono text-[11px] text-slate-500 dark:text-slate-500 sm:w-36 sm:shrink-0">
                   {new Date(e.createdAt).toLocaleString()}
                 </span>
-                <span className="font-semibold text-slate-900 dark:text-slate-200">{e.actorName}</span>
-                <span className="text-slate-600 dark:text-slate-400">
+                <span className="font-semibold text-slate-900 dark:text-slate-200 sm:w-28 sm:shrink-0 sm:truncate">{e.actorName}</span>
+                <span className="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
                   {e.action} — {e.targetLabel}
                 </span>
               </div>
@@ -292,13 +294,13 @@ export default function Dashboard() {
       {/* Roles & Access Matrix + Governance Readiness */}
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         {/* LEFT card: Role & Permissions Matrix */}
-        <div className="card p-5">
+        <div className="card p-4 sm:p-5">
           <div className="mb-3 flex items-center justify-between">
             <h3 className="card-title text-sm font-semibold text-slate-900 dark:text-slate-200">Role & Access Matrix</h3>
             <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">RBAC Governance Model</span>
           </div>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+          <div className="overflow-x-auto no-scrollbar -mx-1 px-1 sm:mx-0 sm:px-0">
+            <table className="w-full min-w-[280px] sm:min-w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-slate-200 dark:border-white/[0.08] text-slate-600 dark:text-slate-400 font-semibold">
                   <th className="py-2">Role</th>
@@ -332,7 +334,7 @@ export default function Dashboard() {
         </div>
 
         {/* RIGHT card: Governance Readiness Checklist */}
-        <div className="card p-5">
+        <div className="card p-4 sm:p-5">
           <h3 className="card-title mb-4 text-sm font-semibold text-slate-900 dark:text-slate-200">Governance Readiness</h3>
           <div className="space-y-2.5">
             <div className="flex items-center gap-2.5 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
