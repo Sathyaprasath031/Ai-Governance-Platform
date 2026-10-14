@@ -1,10 +1,11 @@
 import { useEffect, useRef } from 'react';
 
 /**
- * Violet Plasma-Orb with Orbiting Energy Particles (3D Effect):
- * - Exactly the same cohesive orbital structure in both Dark and Light mode
- * - Particles orbit synchronously around the central core in a tight elliptical belt
- * - Crisp, glowing core and orbiting nodes calibrated for both themes
+ * Violet 3D Revolving Plasma-Orb with Concentric Orbital Rings:
+ * - Cohesive gyroscopic orbital belts that rotate smoothly in 3D perspective
+ * - Clean elliptical orbital paths connecting all revolving nodes (never scattered)
+ * - 3D depth scaling (foreground particles are larger/brighter, background dimmer)
+ * - Calibrated for both Dark mode (additive luminous radiance) and Light mode (rich violet-amethyst vibrancy)
  */
 export default function Background3D() {
   const canvasRef = useRef(null);
@@ -20,24 +21,54 @@ export default function Background3D() {
     let H = 0;
     let t = 0;
 
-    // Orbiting energy particles: tight, cohesive orbit around core
-    const PARTICLES = Array.from({ length: 26 }, () => ({
-      rf: 0.55 + Math.random() * 1.45,       // orbit radius (tight around core)
-      speed: 0.005 + Math.random() * 0.011, // unified revolving direction
-      phase: Math.random() * Math.PI * 2,
-      tilt: 0.82 + Math.random() * 0.18,    // tight orbital plane
-      size: 1.5 + Math.random() * 2.2,
-      hue: 262 + Math.random() * 26,        // violet-amethyst spectrum
-      drift: Math.random() * 0.5 + 0.75,
-    }));
+    // 3 Cohesive 3D Orbital Belts around the central orb
+    const BELTS = [
+      {
+        rFactor: 0.88,
+        tilt: 0.42,
+        rot: -0.32,
+        speed: 0.009,
+        trackWidth: 1.2,
+        particles: Array.from({ length: 8 }, (_, i) => ({
+          phase: (i / 8) * Math.PI * 2 + Math.random() * 0.2,
+          size: 2.2 + Math.random() * 1.4,
+          hue: 260 + Math.random() * 18, // deep violet
+        })),
+      },
+      {
+        rFactor: 1.34,
+        tilt: 0.36,
+        rot: 0.28,
+        speed: 0.0062,
+        trackWidth: 1.5,
+        particles: Array.from({ length: 12 }, (_, i) => ({
+          phase: (i / 12) * Math.PI * 2 + Math.random() * 0.2,
+          size: 2.5 + Math.random() * 1.8,
+          hue: 272 + Math.random() * 22, // violet-fuchsia
+        })),
+      },
+      {
+        rFactor: 1.82,
+        tilt: 0.46,
+        rot: -0.14,
+        speed: 0.0042,
+        trackWidth: 1.0,
+        particles: Array.from({ length: 8 }, (_, i) => ({
+          phase: (i / 8) * Math.PI * 2 + Math.random() * 0.2,
+          size: 2.0 + Math.random() * 1.4,
+          hue: 284 + Math.random() * 20, // amethyst
+        })),
+      },
+    ];
 
-    const orbs = Array.from({ length: 4 }, (_, i) => ({
-      x: Math.random(),
-      y: Math.random(),
-      r: 80 + Math.random() * 130,
-      vx: (Math.random() - 0.5) * 0.0004,
-      vy: (Math.random() - 0.5) * 0.0003,
-      hue: [268, 285, 300][i % 3],
+    // Subtle drifting background ambient orbs
+    const ambientOrbs = Array.from({ length: 4 }, (_, i) => ({
+      x: 0.2 + (i % 2) * 0.6,
+      y: 0.2 + Math.floor(i / 2) * 0.6,
+      r: 90 + Math.random() * 110,
+      vx: (Math.random() - 0.5) * 0.0003,
+      vy: (Math.random() - 0.5) * 0.00025,
+      hue: [265, 280, 295][i % 3],
     }));
 
     function resize() {
@@ -51,11 +82,10 @@ export default function Background3D() {
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     }
 
-    // Position of the revolving core (floats gently around center)
     function orbCenter() {
-      const cx = W * 0.5 + Math.sin(t * 0.004) * W * 0.03;
-      const cy = H * 0.46 + Math.cos(t * 0.003) * H * 0.03;
-      const R = Math.min(W, H) * (0.21 + Math.sin(t * 0.02) * 0.012);
+      const cx = W * 0.5 + Math.sin(t * 0.003) * W * 0.02;
+      const cy = H * 0.46 + Math.cos(t * 0.0025) * H * 0.02;
+      const R = Math.min(W, H) * (0.21 + Math.sin(t * 0.015) * 0.01);
       return { cx, cy, R };
     }
 
@@ -66,20 +96,16 @@ export default function Background3D() {
       ctx.globalCompositeOperation = 'source-over';
       ctx.clearRect(0, 0, W, H);
 
-      // In Dark Mode: 'lighter' gives vibrant additive radiance
-      // In Light Mode: 'source-over' gives rich color saturation against light bg
-      ctx.globalCompositeOperation = isLight ? 'source-over' : 'lighter';
-
       const { cx, cy, R } = orbCenter();
 
-      // 1. Ambient drifting background orbs (subtle & non-intrusive)
-      for (const o of orbs) {
+      // 1. Subtle ambient drifting orbs in far background
+      for (const o of ambientOrbs) {
         o.x += o.vx;
         o.y += o.vy;
-        if (o.x < -0.2 || o.x > 1.2) o.vx *= -1;
-        if (o.y < -0.2 || o.y > 1.2) o.vy *= -1;
-        const g = ctx.createRadialGradient(o.x * W, o.y * H, 0, o.x * W, o.y * H, o.r);
+        if (o.x < 0.05 || o.x > 0.95) o.vx *= -1;
+        if (o.y < 0.05 || o.y > 0.95) o.vy *= -1;
 
+        const g = ctx.createRadialGradient(o.x * W, o.y * H, 0, o.x * W, o.y * H, o.r);
         if (isLight) {
           g.addColorStop(0, `hsla(${o.hue}, 80%, 65%, 0.06)`);
           g.addColorStop(1, 'hsla(275, 80%, 65%, 0)');
@@ -87,94 +113,153 @@ export default function Background3D() {
           g.addColorStop(0, `hsla(${o.hue}, 90%, 65%, 0.08)`);
           g.addColorStop(1, 'hsla(275, 90%, 65%, 0)');
         }
-
         ctx.fillStyle = g;
         ctx.beginPath();
         ctx.arc(o.x * W, o.y * H, o.r, 0, Math.PI * 2);
         ctx.fill();
       }
 
-      // 2. Wide outer bloom (soft violet halo)
-      const bloom = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 4.0);
+      // 2. Wide soft aura bloom around center
+      const bloom = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 3.8);
       if (isLight) {
-        bloom.addColorStop(0, 'hsla(270, 85%, 62%, 0.16)');
-        bloom.addColorStop(0.35, 'hsla(275, 80%, 68%, 0.07)');
-        bloom.addColorStop(1, 'hsla(280, 75%, 72%, 0)');
+        bloom.addColorStop(0, 'hsla(268, 80%, 65%, 0.14)');
+        bloom.addColorStop(0.4, 'hsla(275, 75%, 70%, 0.06)');
+        bloom.addColorStop(1, 'hsla(280, 70%, 75%, 0)');
       } else {
-        bloom.addColorStop(0, 'hsla(270, 95%, 72%, 0.2)');
-        bloom.addColorStop(0.35, 'hsla(275, 90%, 62%, 0.09)');
+        bloom.addColorStop(0, 'hsla(270, 95%, 72%, 0.22)');
+        bloom.addColorStop(0.4, 'hsla(275, 90%, 62%, 0.08)');
         bloom.addColorStop(1, 'hsla(280, 90%, 60%, 0)');
       }
       ctx.fillStyle = bloom;
       ctx.beginPath();
-      ctx.arc(cx, cy, R * 4.0, 0, Math.PI * 2);
+      ctx.arc(cx, cy, R * 3.8, 0, Math.PI * 2);
       ctx.fill();
 
-      // 3. Central pulsing revolving core
-      const pulse = 1 + Math.sin(t * 0.05) * 0.06;
-      const core = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 0.5 * pulse);
-
+      // 3. Central pulsing plasma orb
+      const pulse = 1 + Math.sin(t * 0.04) * 0.05;
+      const coreR = R * 0.48 * pulse;
+      const core = ctx.createRadialGradient(cx, cy, 0, cx, cy, coreR);
       if (isLight) {
-        // High-contrast, clean luminous orb matching dark mode structure
         core.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
-        core.addColorStop(0.2, 'hsla(265, 90%, 75%, 0.65)');
-        core.addColorStop(0.5, 'hsla(270, 85%, 55%, 0.45)');
-        core.addColorStop(0.8, 'hsla(272, 80%, 60%, 0.2)');
-        core.addColorStop(1, 'hsla(275, 75%, 65%, 0)');
+        core.addColorStop(0.25, 'hsla(265, 85%, 72%, 0.55)');
+        core.addColorStop(0.6, 'hsla(270, 80%, 62%, 0.32)');
+        core.addColorStop(0.88, 'hsla(275, 75%, 68%, 0.12)');
+        core.addColorStop(1, 'hsla(280, 70%, 72%, 0)');
       } else {
-        core.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
-        core.addColorStop(0.35, 'hsla(265, 100%, 88%, 0.55)');
-        core.addColorStop(0.7, 'hsla(270, 95%, 72%, 0.3)');
-        core.addColorStop(1, 'hsla(272, 95%, 65%, 0)');
+        core.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+        core.addColorStop(0.3, 'hsla(265, 100%, 88%, 0.6)');
+        core.addColorStop(0.65, 'hsla(270, 95%, 72%, 0.35)');
+        core.addColorStop(1, 'hsla(275, 90%, 65%, 0)');
       }
       ctx.fillStyle = core;
       ctx.beginPath();
-      ctx.arc(cx, cy, R * 0.5 * pulse, 0, Math.PI * 2);
+      ctx.arc(cx, cy, coreR, 0, Math.PI * 2);
       ctx.fill();
 
-      // 4. Orbiting energy particles revolving tightly around the core
-      for (const p of PARTICLES) {
-        const a = p.phase + t * p.speed;
-        const rr = R * p.rf * (1 + Math.sin(t * 0.01 + p.phase) * 0.06 * p.drift);
-        const x = cx + Math.cos(a) * rr;
-        const y = cy + Math.sin(a) * rr * p.tilt;
-        const size = p.size * (0.8 + 0.4 * Math.sin(t * 0.03 + p.phase));
+      // 4. Concentric 3D Orbital Belts and revolving particles
+      for (const belt of BELTS) {
+        const r = R * belt.rFactor;
+        const cosRot = Math.cos(belt.rot);
+        const sinRot = Math.sin(belt.rot);
 
-        const g = ctx.createRadialGradient(x, y, 0, x, y, size * 5.5);
-
-        if (isLight) {
-          // Sharp, saturated glowing violet-amethyst dots clearly orbiting the core
-          g.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
-          g.addColorStop(0.25, `hsla(${p.hue}, 90%, 55%, 0.75)`);
-          g.addColorStop(0.6, `hsla(${p.hue}, 85%, 62%, 0.4)`);
-          g.addColorStop(1, `hsla(${p.hue}, 80%, 70%, 0)`);
-        } else {
-          g.addColorStop(0, 'rgba(255, 255, 255, 0.55)');
-          g.addColorStop(0.35, `hsla(${p.hue}, 100%, 82%, 0.4)`);
-          g.addColorStop(1, `hsla(${p.hue}, 100%, 75%, 0)`);
-        }
-
-        ctx.fillStyle = g;
+        // A. Draw the glowing orbital ellipse track (connects all nodes into a cohesive belt)
+        ctx.save();
         ctx.beginPath();
-        ctx.arc(x, y, size * 5.5, 0, Math.PI * 2);
-        ctx.fill();
+        // Sample points along the rotated 3D ellipse for perfect rendering
+        const segments = 64;
+        for (let s = 0; s <= segments; s++) {
+          const theta = (s / segments) * Math.PI * 2;
+          const px = Math.cos(theta) * r;
+          const py = Math.sin(theta) * r * belt.tilt;
+          const rx = cx + px * cosRot - py * sinRot;
+          const ry = cy + px * sinRot + py * cosRot;
+          if (s === 0) ctx.moveTo(rx, ry);
+          else ctx.lineTo(rx, ry);
+        }
+        ctx.closePath();
+        ctx.lineWidth = belt.trackWidth;
+        ctx.strokeStyle = isLight
+          ? 'hsla(268, 75%, 65%, 0.22)'
+          : 'hsla(268, 85%, 75%, 0.15)';
+        ctx.stroke();
+        ctx.restore();
+
+        // B. Draw revolving particles along this orbital track with 3D depth
+        for (const p of belt.particles) {
+          const a = p.phase + t * belt.speed;
+          const sinA = Math.sin(a);
+          const cosA = Math.cos(a);
+
+          // 3D projected coordinates on the rotated orbital plane
+          const px = cosA * r;
+          const py = sinA * r * belt.tilt;
+          const x = cx + px * cosRot - py * sinRot;
+          const y = cy + px * sinRot + py * cosRot;
+
+          // 3D Depth cue: foreground particles are larger, brighter; background are dimmer
+          const depth = 0.72 + 0.5 * sinA;
+          const nodeSize = p.size * depth;
+
+          // Subtle tapered orbit tail behind revolving node
+          ctx.beginPath();
+          const tailSteps = 8;
+          for (let step = 0; step <= tailSteps; step++) {
+            const ta = a - (step / tailSteps) * 0.24;
+            const tpx = Math.cos(ta) * r;
+            const tpy = Math.sin(ta) * r * belt.tilt;
+            const tx = cx + tpx * cosRot - tpy * sinRot;
+            const ty = cy + tpx * sinRot + tpy * cosRot;
+            if (step === 0) ctx.moveTo(tx, ty);
+            else ctx.lineTo(tx, ty);
+          }
+          ctx.lineWidth = nodeSize * 0.7;
+          ctx.strokeStyle = isLight
+            ? `hsla(${p.hue}, 80%, 65%, ${0.28 * depth})`
+            : `hsla(${p.hue}, 90%, 75%, ${0.35 * depth})`;
+          ctx.stroke();
+
+          // Particle radiant halo
+          const haloR = nodeSize * 4.2;
+          const pg = ctx.createRadialGradient(x, y, 0, x, y, haloR);
+          if (isLight) {
+            pg.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+            pg.addColorStop(0.25, `hsla(${p.hue}, 90%, 55%, ${0.85 * depth})`);
+            pg.addColorStop(0.65, `hsla(${p.hue}, 85%, 65%, ${0.35 * depth})`);
+            pg.addColorStop(1, `hsla(${p.hue}, 80%, 70%, 0)`);
+          } else {
+            pg.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
+            pg.addColorStop(0.3, `hsla(${p.hue}, 100%, 82%, ${0.65 * depth})`);
+            pg.addColorStop(0.7, `hsla(${p.hue}, 100%, 72%, ${0.25 * depth})`);
+            pg.addColorStop(1, `hsla(${p.hue}, 100%, 65%, 0)`);
+          }
+
+          ctx.fillStyle = pg;
+          ctx.beginPath();
+          ctx.arc(x, y, haloR, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Core bead
+          ctx.fillStyle = isLight ? `hsla(${p.hue}, 95%, 48%, ${0.9 * depth})` : '#ffffff';
+          ctx.beginPath();
+          ctx.arc(x, y, Math.max(1, nodeSize * 0.55), 0, Math.PI * 2);
+          ctx.fill();
+        }
       }
 
-      // 5. Crackling micro-sparks near core
-      const sparkCount = 9;
+      // 5. Tiny luminous central micro-sparks
+      const sparkCount = 8;
       for (let i = 0; i < sparkCount; i++) {
-        const seed = i * 137.5;
-        const a = (seed + t * (0.02 + (i % 3) * 0.01)) % (Math.PI * 2);
-        const rr = R * (0.35 + ((Math.sin(t * 0.09 + seed) + 1) / 2) * 0.45);
-        const x = cx + Math.cos(a) * rr;
-        const y = cy + Math.sin(a) * rr * 0.9;
+        const seed = i * 142.3;
+        const sa = seed + t * 0.02;
+        const sr = R * (0.28 + ((Math.sin(t * 0.08 + seed) + 1) / 2) * 0.35);
+        const sx = cx + Math.cos(sa) * sr;
+        const sy = cy + Math.sin(sa) * sr * 0.65;
 
         ctx.fillStyle = isLight
-          ? 'hsla(270, 85%, 50%, 0.55)'
-          : 'rgba(240, 230, 255, 0.4)';
-
+          ? 'hsla(270, 85%, 52%, 0.6)'
+          : 'rgba(245, 235, 255, 0.5)';
         ctx.beginPath();
-        ctx.arc(x, y, 1.1, 0, Math.PI * 2);
+        ctx.arc(sx, sy, 1.2, 0, Math.PI * 2);
         ctx.fill();
       }
 

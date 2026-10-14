@@ -1,37 +1,37 @@
 // Translucent badge palettes: solid dot + soft tinted pill.
-// Text uses a light-mode tone plus dark: variant for the dark theme.
+// Dual-mode high contrast: crisp dark text on light surfaces, luminous pastel text in dark mode.
 export const STATUS_COLORS = {
-  draft: 'bg-slate-400/10 text-slate-600 dark:text-slate-300 border-slate-400/20',
-  pending_review: 'bg-amber-400/10 text-amber-700 dark:text-amber-300 border-amber-400/25',
-  approved: 'bg-emerald-400/10 text-emerald-700 dark:text-emerald-300 border-emerald-400/25',
-  rejected: 'bg-rose-400/10 text-rose-700 dark:text-rose-300 border-rose-400/25',
-  deployed: 'bg-sky-400/10 text-sky-700 dark:text-sky-300 border-sky-400/25',
-  deprecated: 'bg-orange-400/10 text-orange-700 dark:text-orange-300 border-orange-400/25',
-  retired: 'bg-slate-400/10 text-slate-500 dark:text-slate-400 border-slate-400/20',
+  draft: 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-400/10 dark:text-slate-300 dark:border-slate-400/20',
+  pending_review: 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-400/10 dark:text-amber-300 dark:border-amber-400/25',
+  approved: 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-400/10 dark:text-emerald-300 dark:border-emerald-400/25',
+  rejected: 'bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-400/10 dark:text-rose-300 dark:border-rose-400/25',
+  deployed: 'bg-sky-50 text-sky-800 border-sky-200 dark:bg-sky-400/10 dark:text-sky-300 dark:border-sky-400/25',
+  deprecated: 'bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-400/10 dark:text-orange-300 dark:border-orange-400/25',
+  retired: 'bg-slate-100 text-slate-600 border-slate-200 dark:bg-slate-400/10 dark:text-slate-400 dark:border-slate-400/20',
 };
 
 export const STATUS_DOTS = {
   draft: 'bg-slate-400',
-  pending_review: 'bg-amber-400',
-  approved: 'bg-emerald-400',
-  rejected: 'bg-rose-400',
-  deployed: 'bg-sky-400',
-  deprecated: 'bg-orange-400',
+  pending_review: 'bg-amber-500',
+  approved: 'bg-emerald-500',
+  rejected: 'bg-rose-500',
+  deployed: 'bg-sky-500',
+  deprecated: 'bg-orange-500',
   retired: 'bg-slate-500',
 };
 
 export const RISK_COLORS = {
-  low: 'bg-emerald-400/10 text-emerald-700 dark:text-emerald-300 border-emerald-400/25',
-  medium: 'bg-amber-400/10 text-amber-700 dark:text-amber-300 border-amber-400/25',
-  high: 'bg-orange-400/10 text-orange-700 dark:text-orange-300 border-orange-400/25',
-  critical: 'bg-rose-400/15 text-rose-700 dark:text-rose-300 border-rose-400/30',
+  low: 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-400/10 dark:text-emerald-300 dark:border-emerald-400/25',
+  medium: 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-400/10 dark:text-amber-300 dark:border-amber-400/25',
+  high: 'bg-orange-50 text-orange-800 border-orange-200 dark:bg-orange-400/10 dark:text-orange-300 dark:border-orange-400/25',
+  critical: 'bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-400/15 dark:text-rose-300 dark:border-rose-400/30',
 };
 
 export const RISK_DOTS = {
-  low: 'bg-emerald-400',
-  medium: 'bg-amber-400',
-  high: 'bg-orange-400',
-  critical: 'bg-rose-400',
+  low: 'bg-emerald-500',
+  medium: 'bg-amber-500',
+  high: 'bg-orange-500',
+  critical: 'bg-rose-500',
 };
 
 export const COMPLIANCE_LABELS = {
@@ -54,7 +54,7 @@ export const FAIRNESS_LABELS = {
 
 export function StatusBadge({ status }) {
   return (
-    <span className={`badge ${STATUS_COLORS[status] || 'bg-slate-400/10 text-slate-600 dark:text-slate-300 border-slate-400/20'}`}>
+    <span className={`badge ${STATUS_COLORS[status] || 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-400/10 dark:text-slate-300 dark:border-slate-400/20'}`}>
       <span className={`h-1.5 w-1.5 rounded-full ${STATUS_DOTS[status] || 'bg-slate-400'}`} />
       {status.replace('_', ' ')}
     </span>
@@ -63,7 +63,7 @@ export function StatusBadge({ status }) {
 
 export function RiskBadge({ tier }) {
   return (
-    <span className={`badge ${RISK_COLORS[tier] || 'bg-slate-400/10 text-slate-600 dark:text-slate-300 border-slate-400/20'}`}>
+    <span className={`badge ${RISK_COLORS[tier] || 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-400/10 dark:text-slate-300 dark:border-slate-400/20'}`}>
       <span className={`h-1.5 w-1.5 rounded-full ${RISK_DOTS[tier] || 'bg-slate-400'}`} />
       {tier} risk
     </span>

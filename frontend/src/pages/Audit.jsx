@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import api from '../api';
 
 const ACTION_COLORS = {
-  deployed: 'bg-sky-400/10 text-sky-700 dark:text-sky-300 border-sky-400/25',
-  'approval.decide': 'bg-emerald-400/10 text-emerald-700 dark:text-emerald-300 border-emerald-400/25',
-  'approval.reject': 'bg-rose-400/10 text-rose-700 dark:text-rose-300 border-rose-400/25',
-  'version.submit': 'bg-amber-400/10 text-amber-700 dark:text-amber-300 border-amber-400/25',
-  'compliance.update': 'bg-purple-400/10 text-purple-700 dark:text-purple-300 border-purple-400/25',
-  'monitoring.record': 'bg-slate-400/10 text-slate-600 dark:text-slate-300 border-slate-400/20',
+  deployed: 'bg-sky-50 text-sky-800 border-sky-200 dark:bg-sky-400/10 dark:text-sky-300 dark:border-sky-400/25',
+  'approval.decide': 'bg-emerald-50 text-emerald-800 border-emerald-200 dark:bg-emerald-400/10 dark:text-emerald-300 dark:border-emerald-400/25',
+  'approval.reject': 'bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-400/10 dark:text-rose-300 dark:border-rose-400/25',
+  'version.submit': 'bg-amber-50 text-amber-800 border-amber-200 dark:bg-amber-400/10 dark:text-amber-300 dark:border-amber-400/25',
+  'compliance.update': 'bg-purple-50 text-purple-800 border-purple-200 dark:bg-purple-400/10 dark:text-purple-300 dark:border-purple-400/25',
+  'monitoring.record': 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-400/10 dark:text-slate-300 dark:border-slate-400/20',
 };
 
 const ACTION_DEFINITIONS = [
@@ -45,18 +45,18 @@ export default function Audit() {
 
       {error && <div className="alert-error">{error}</div>}
 
-      <div className="card divide-y divide-white/[0.06]">
-        {entries.length === 0 && !error && <p className="p-5 text-sm text-slate-500">No audit entries.</p>}
+      <div className="card divide-y divide-slate-200 dark:divide-white/[0.06]">
+        {entries.length === 0 && !error && <p className="p-5 text-sm text-slate-600 dark:text-slate-400">No audit entries.</p>}
         {entries.map((e) => (
-          <div key={e._id} className="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-4 py-3 text-sm transition-colors hover:bg-white/[0.03]">
-            <span className="w-full font-mono text-[11px] text-slate-500 sm:w-40 sm:shrink-0">
+          <div key={e._id} className="flex flex-wrap items-baseline gap-x-3 gap-y-1 px-4 py-3 text-sm transition-colors hover:bg-slate-100/70 dark:hover:bg-white/[0.03]">
+            <span className="w-full font-mono text-[11px] text-slate-500 dark:text-slate-400 sm:w-40 sm:shrink-0">
               {new Date(e.createdAt).toLocaleString()}
             </span>
-            <span className="w-full truncate font-semibold text-slate-200 sm:w-36 sm:shrink-0">{e.actorName}</span>
-            <span className={`badge ${ACTION_COLORS[e.action] || 'bg-slate-400/10 text-slate-300 border-slate-400/20'}`}>
+            <span className="w-full truncate font-semibold text-slate-900 dark:text-slate-200 sm:w-36 sm:shrink-0">{e.actorName}</span>
+            <span className={`badge ${ACTION_COLORS[e.action] || 'bg-slate-100 text-slate-700 border-slate-200 dark:bg-slate-400/10 dark:text-slate-300 dark:border-slate-400/20'}`}>
               {e.action}
             </span>
-            <span className="text-slate-400">{e.targetLabel}</span>
+            <span className="text-slate-700 dark:text-slate-400">{e.targetLabel}</span>
           </div>
         ))}
       </div>
@@ -65,11 +65,11 @@ export default function Audit() {
 
       <div className="mt-6 grid gap-4 lg:grid-cols-2">
         {/* Tracked Actions */}
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] px-5 py-5 backdrop-blur-sm">
-          <h2 className="mb-3 text-sm font-semibold text-slate-300">Tracked Actions</h2>
+        <div className="rounded-2xl border border-slate-200 bg-white/80 dark:border-white/[0.06] dark:bg-white/[0.03] px-5 py-5 backdrop-blur-sm shadow-sm dark:shadow-none">
+          <h2 className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-200">Tracked Actions</h2>
           <div className="space-y-2">
             {ACTION_DEFINITIONS.map(({ action, desc }) => (
-              <div key={action} className="flex items-center gap-2 text-xs text-slate-400">
+              <div key={action} className="flex items-center gap-2 text-xs text-slate-700 dark:text-slate-400">
                 <span className={`badge ${ACTION_COLORS[action]}`}>
                   {action}
                 </span>
@@ -80,18 +80,18 @@ export default function Audit() {
         </div>
 
         {/* Why Immutable Audit? */}
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] px-5 py-5 backdrop-blur-sm">
-          <h2 className="mb-3 text-sm font-semibold text-slate-300">Why Immutable Audit?</h2>
+        <div className="rounded-2xl border border-slate-200 bg-white/80 dark:border-white/[0.06] dark:bg-white/[0.03] px-5 py-5 backdrop-blur-sm shadow-sm dark:shadow-none">
+          <h2 className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-200">Why Immutable Audit?</h2>
           <div className="space-y-3">
-            <div className="flex gap-2.5 text-sm text-slate-500">
+            <div className="flex gap-2.5 text-sm text-slate-700 dark:text-slate-400">
               <span className="shrink-0">🔒</span>
               <span>Tamper-proof records for regulatory compliance</span>
             </div>
-            <div className="flex gap-2.5 text-sm text-slate-500">
+            <div className="flex gap-2.5 text-sm text-slate-700 dark:text-slate-400">
               <span className="shrink-0">📋</span>
               <span>Complete chain of custody for every model version</span>
             </div>
-            <div className="flex gap-2.5 text-sm text-slate-500">
+            <div className="flex gap-2.5 text-sm text-slate-700 dark:text-slate-400">
               <span className="shrink-0">🔍</span>
               <span>Instant forensic analysis when issues arise</span>
             </div>

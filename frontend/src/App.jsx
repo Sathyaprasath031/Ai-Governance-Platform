@@ -16,7 +16,7 @@ function Protected({ children }) {
   if (loading)
     return (
       <div className="grid min-h-[50vh] place-items-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/15 border-t-brand-400" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-300 dark:border-white/15 border-t-brand-600 dark:border-t-brand-400" />
       </div>
     );
   if (!user) return <Navigate to="/login" replace />;
@@ -43,27 +43,27 @@ function App() {
             </Routes>
           </main>
           {/* Rich multi-column footer */}
-          <footer className="relative mt-auto border-t border-white/[0.06] bg-white/[0.02] py-8 backdrop-blur-sm">
+          <footer className="relative mt-auto border-t border-slate-200 bg-white/80 dark:border-white/[0.06] dark:bg-white/[0.02] py-8 backdrop-blur-sm">
             <div className="mx-auto max-w-7xl px-3 sm:px-4">
               <div className="grid gap-8 lg:grid-cols-3">
                 {/* Column 1: Platform branding */}
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 text-sm font-semibold text-slate-300">
-                    <ShieldCheck className="h-4 w-4 text-brand-400" />
+                  <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-300">
+                    <ShieldCheck className="h-4 w-4 text-brand-600 dark:text-brand-400" />
                     <span>AI Governance Control Center</span>
                   </div>
-                  <p className="text-xs text-slate-500 leading-relaxed">
+                  <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
                     End-to-end lifecycle governance, risk-tiered approval workflows, and immutable audit logs for responsible AI systems.
                   </p>
-                  <p className="text-xs text-slate-600">
+                  <p className="text-xs text-slate-500 dark:text-slate-500">
                     © {new Date().getFullYear()} AI Governance Platform · Built with transparency in mind
                   </p>
                 </div>
 
                 {/* Column 2: Platform links */}
                 <div>
-                  <h3 className="mb-3 text-sm font-semibold text-slate-300">Governance Modules</h3>
-                  <ul className="space-y-1.5 text-xs text-slate-500">
+                  <h3 className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-300">Governance Modules</h3>
+                  <ul className="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
                     <li>• Model Registry & Lifecycle Management</li>
                     <li>• Multi-Tier Approval Workflows</li>
                     <li>• Cryptographic Audit Logging</li>
@@ -73,8 +73,8 @@ function App() {
 
                 {/* Column 3: Compliance text list */}
                 <div>
-                  <h3 className="mb-3 text-sm font-semibold text-slate-300">Compliance & Trust</h3>
-                  <ul className="space-y-1.5 text-xs text-slate-500">
+                  <h3 className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-300">Compliance & Trust</h3>
+                  <ul className="space-y-1.5 text-xs text-slate-600 dark:text-slate-400">
                     <li>• EU AI Act Readiness Framework</li>
                     <li>• NIST AI Risk Management Framework (AI RMF)</li>
                     <li>• SOC 2 Type II Aligned</li>

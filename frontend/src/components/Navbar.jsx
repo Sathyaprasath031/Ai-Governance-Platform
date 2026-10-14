@@ -10,8 +10,13 @@ function useTheme() {
     const next = !dark;
     setDark(next);
     const el = document.documentElement;
-    el.classList.toggle('light', !next);
-    el.classList.toggle('dark', next);
+    if (next) {
+      el.classList.add('dark');
+      el.classList.remove('light');
+    } else {
+      el.classList.add('light');
+      el.classList.remove('dark');
+    }
     localStorage.setItem('gov_theme', next ? 'dark' : 'light');
   };
   return [dark, toggle];
@@ -27,10 +32,10 @@ export default function Navbar() {
   const go = (fn) => () => { fn(); close(); };
 
   const link = ({ isActive }) =>
-    `flex items-center rounded-xl px-3.5 py-2.5 text-sm font-medium transition-colors ${
+    `flex items-center rounded-xl px-3.5 py-2 text-sm font-semibold transition-all ${
       isActive
-        ? 'bg-gradient-to-r from-brand-500/30 to-fuchsia-500/20 text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.08)] ring-1 ring-brand-400/30'
-        : 'text-slate-300 hover:bg-white/[0.06] hover:text-white'
+        ? 'bg-brand-50 text-brand-700 border border-brand-200/80 shadow-sm dark:bg-gradient-to-r dark:from-brand-500/30 dark:to-fuchsia-500/20 dark:text-white dark:border-brand-400/30 dark:shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]'
+        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-white/[0.06] dark:hover:text-white'
     }`;
 
   const navLinks = (
@@ -43,33 +48,33 @@ export default function Navbar() {
   );
 
   return (
-    <nav className="sticky top-0 z-20 border-b border-white/10 bg-night-975/80 backdrop-blur-xl">
+    <nav className="sticky top-0 z-20 border-b border-slate-200/80 dark:border-white/10 bg-white/80 dark:bg-[#090616]/80 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center gap-2 px-4 py-2.5 sm:gap-4">
-        <NavLink to="/" className="group flex min-w-0 items-center gap-2.5 font-bold text-white" onClick={close}>
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-brand-500 to-fuchsia-500 shadow-glow-sm transition-shadow group-hover:shadow-glow">
-            <ShieldCheck size={19} className="text-onaccent" />
+        <NavLink to="/" className="group flex min-w-0 items-center gap-2.5 font-bold text-slate-900 dark:text-white" onClick={close}>
+          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-brand-600 to-fuchsia-600 shadow-glow-sm transition-shadow group-hover:shadow-glow text-white">
+            <ShieldCheck size={19} className="text-white" />
           </span>
           <span className="min-w-0 truncate tracking-tight">
             AI&nbsp;Governance
-            <span className="hidden text-[10px] font-medium uppercase tracking-[0.18em] text-slate-500 sm:block">
+            <span className="hidden text-[10px] font-semibold uppercase tracking-[0.18em] text-brand-700 dark:text-slate-400 sm:block">
               Control Center
             </span>
           </span>
         </NavLink>
 
         {/* Desktop links */}
-        <div className="hidden flex-1 items-center gap-1 md:flex">{navLinks}</div>
+        <div className="hidden flex-1 items-center gap-1.5 md:flex">{navLinks}</div>
         <div className="flex-1 md:hidden" />
 
         {user ? (
           <div className="hidden items-center gap-3 md:flex">
-            <div className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-white/[0.05] py-1.5 pl-1.5 pr-3.5">
-              <span className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-to-br from-brand-400 to-fuchsia-500 text-xs font-bold text-onaccent">
+            <div className="flex items-center gap-2.5 rounded-xl border border-slate-200/90 dark:border-white/10 bg-white/90 dark:bg-white/[0.05] py-1.5 pl-1.5 pr-3.5 shadow-sm dark:shadow-none">
+              <span className="grid h-7 w-7 place-items-center rounded-lg bg-gradient-to-br from-brand-600 to-fuchsia-600 text-xs font-bold text-white shadow-sm">
                 {user.name?.[0]?.toUpperCase() || '?'}
               </span>
               <div className="leading-tight">
-                <div className="max-w-[9rem] truncate whitespace-nowrap text-sm font-semibold text-slate-100">{user.name}</div>
-                <div className="whitespace-nowrap text-[11px] text-slate-500">{user.role.replace('_', ' ')}</div>
+                <div className="max-w-[9rem] truncate whitespace-nowrap text-sm font-semibold text-slate-900 dark:text-slate-100">{user.name}</div>
+                <div className="whitespace-nowrap text-[11px] font-medium text-slate-500 dark:text-slate-400">{user.role.replace('_', ' ')}</div>
               </div>
             </div>
             <button className="btn-secondary" onClick={() => { logout(); navigate('/login'); }}>
@@ -105,16 +110,16 @@ export default function Navbar() {
         createPortal(
           <div className="md:hidden">
             <div
-              className="fixed inset-0 z-40 bg-night-950/60 backdrop-blur-sm"
+              className="fixed inset-0 z-40 bg-slate-950/40 dark:bg-night-950/60 backdrop-blur-sm"
               onClick={close}
               aria-hidden
             />
-            <aside className="animate-slide-in-left fixed inset-y-0 left-0 z-50 flex w-[78%] max-w-[300px] flex-col border-r border-white/10 bg-night-975/95 shadow-card backdrop-blur-2xl">
+            <aside className="animate-slide-in-left fixed inset-y-0 left-0 z-50 flex w-[78%] max-w-[300px] flex-col border-r border-slate-200 dark:border-white/10 bg-white/95 dark:bg-[#090616]/95 shadow-card backdrop-blur-2xl">
               {/* Drawer header */}
-              <div className="flex items-center justify-between border-b border-white/10 px-4 py-3.5">
-                <div className="flex items-center gap-2.5 font-bold text-white">
-                  <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-brand-500 to-fuchsia-500 shadow-glow-sm">
-                    <ShieldCheck size={16} className="text-onaccent" />
+              <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 px-4 py-3.5">
+                <div className="flex items-center gap-2.5 font-bold text-slate-900 dark:text-white">
+                  <span className="grid h-8 w-8 place-items-center rounded-lg bg-gradient-to-br from-brand-600 to-fuchsia-600 shadow-glow-sm text-white">
+                    <ShieldCheck size={16} className="text-white" />
                   </span>
                   <span className="text-sm tracking-tight">AI&nbsp;Governance</span>
                 </div>
@@ -124,19 +129,19 @@ export default function Navbar() {
               </div>
 
               {/* Links */}
-              <div className="flex flex-1 flex-col gap-1 overflow-y-auto p-3">{navLinks}</div>
+              <div className="flex flex-1 flex-col gap-1.5 overflow-y-auto p-3">{navLinks}</div>
 
               {/* Footer / user */}
-              <div className="border-t border-white/10 p-3">
+              <div className="border-t border-slate-200 dark:border-white/10 p-3">
                 {user ? (
                   <div className="space-y-2.5">
-                    <div className="flex min-w-0 items-center gap-2.5 rounded-xl border border-white/10 bg-white/[0.05] p-2.5">
-                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-brand-400 to-fuchsia-500 text-xs font-bold text-onaccent">
+                    <div className="flex min-w-0 items-center gap-2.5 rounded-xl border border-slate-200/90 dark:border-white/10 bg-white/90 dark:bg-white/[0.05] p-2.5 shadow-sm dark:shadow-none">
+                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-gradient-to-br from-brand-600 to-fuchsia-600 text-xs font-bold text-white shadow-sm">
                         {user.name?.[0]?.toUpperCase() || '?'}
                       </span>
                       <div className="min-w-0 leading-tight">
-                        <div className="truncate text-sm font-semibold text-slate-100">{user.name}</div>
-                        <div className="text-[11px] text-slate-500">{user.role.replace('_', ' ')}</div>
+                        <div className="truncate text-sm font-semibold text-slate-900 dark:text-slate-100">{user.name}</div>
+                        <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400">{user.role.replace('_', ' ')}</div>
                       </div>
                     </div>
                     <button className="btn-secondary w-full justify-center" onClick={go(() => { logout(); navigate('/login'); })}>

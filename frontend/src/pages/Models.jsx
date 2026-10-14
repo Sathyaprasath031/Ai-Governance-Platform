@@ -20,21 +20,21 @@ import { useAuth } from '../context/AuthContext';
 const EMPTY = { name: '', description: '', domain: 'other', riskTier: 'medium', intendedUse: '', regulated: false };
 
 const LIFECYCLE_STAGES = [
-  { label: 'Draft', badge: 'border-slate-500/20 bg-slate-500/10 text-slate-300', dot: 'bg-slate-400' },
-  { label: 'Pending Review', badge: 'border-amber-400/25 bg-amber-400/10 text-amber-300', dot: 'bg-amber-400' },
-  { label: 'Approved', badge: 'border-emerald-400/25 bg-emerald-400/10 text-emerald-300', dot: 'bg-emerald-400' },
-  { label: 'Deployed', badge: 'border-sky-400/25 bg-sky-400/10 text-sky-300', dot: 'bg-sky-400' },
-  { label: 'Deprecated', badge: 'border-rose-400/25 bg-rose-400/10 text-rose-300', dot: 'bg-rose-400' },
+  { label: 'Draft', badge: 'border-slate-300 dark:border-slate-500/20 bg-slate-100 dark:bg-slate-500/10 text-slate-700 dark:text-slate-300', dot: 'bg-slate-400' },
+  { label: 'Pending Review', badge: 'border-amber-300 dark:border-amber-400/25 bg-amber-50 dark:bg-amber-400/10 text-amber-800 dark:text-amber-300', dot: 'bg-amber-500' },
+  { label: 'Approved', badge: 'border-emerald-300 dark:border-emerald-400/25 bg-emerald-50 dark:bg-emerald-400/10 text-emerald-800 dark:text-emerald-300', dot: 'bg-emerald-500' },
+  { label: 'Deployed', badge: 'border-sky-300 dark:border-sky-400/25 bg-sky-50 dark:bg-sky-400/10 text-sky-800 dark:text-sky-300', dot: 'bg-sky-500' },
+  { label: 'Deprecated', badge: 'border-rose-300 dark:border-rose-400/25 bg-rose-50 dark:bg-rose-400/10 text-rose-800 dark:text-rose-300', dot: 'bg-rose-500' },
 ];
 
 const SUPPORTED_DOMAINS = [
-  { key: 'credit_risk', label: 'Credit Risk', icon: CreditCard, badge: 'border-amber-400/20 bg-amber-400/10 text-amber-300', iconColor: 'text-amber-400' },
-  { key: 'fraud', label: 'Fraud', icon: ShieldAlert, badge: 'border-rose-400/20 bg-rose-400/10 text-rose-300', iconColor: 'text-rose-400' },
-  { key: 'nlp', label: 'NLP', icon: MessageSquare, badge: 'border-sky-400/20 bg-sky-400/10 text-sky-300', iconColor: 'text-sky-400' },
-  { key: 'vision', label: 'Vision', icon: Eye, badge: 'border-purple-400/20 bg-purple-400/10 text-purple-300', iconColor: 'text-purple-400' },
-  { key: 'forecasting', label: 'Forecasting', icon: TrendingUp, badge: 'border-emerald-400/20 bg-emerald-400/10 text-emerald-300', iconColor: 'text-emerald-400' },
-  { key: 'recommendation', label: 'Recommendation', icon: Sparkles, badge: 'border-fuchsia-400/20 bg-fuchsia-400/10 text-fuchsia-300', iconColor: 'text-fuchsia-400' },
-  { key: 'other', label: 'Other', icon: Box, badge: 'border-slate-400/20 bg-slate-400/10 text-slate-300', iconColor: 'text-slate-400' },
+  { key: 'credit_risk', label: 'Credit Risk', icon: CreditCard, badge: 'border-amber-300/80 dark:border-amber-400/20 bg-amber-50 dark:bg-amber-400/10 text-amber-800 dark:text-amber-300', iconColor: 'text-amber-600 dark:text-amber-400' },
+  { key: 'fraud', label: 'Fraud', icon: ShieldAlert, badge: 'border-rose-300/80 dark:border-rose-400/20 bg-rose-50 dark:bg-rose-400/10 text-rose-800 dark:text-rose-300', iconColor: 'text-rose-600 dark:text-rose-400' },
+  { key: 'nlp', label: 'NLP', icon: MessageSquare, badge: 'border-sky-300/80 dark:border-sky-400/20 bg-sky-50 dark:bg-sky-400/10 text-sky-800 dark:text-sky-300', iconColor: 'text-sky-600 dark:text-sky-400' },
+  { key: 'vision', label: 'Vision', icon: Eye, badge: 'border-purple-300/80 dark:border-purple-400/20 bg-purple-50 dark:bg-purple-400/10 text-purple-800 dark:text-purple-300', iconColor: 'text-purple-600 dark:text-purple-400' },
+  { key: 'forecasting', label: 'Forecasting', icon: TrendingUp, badge: 'border-emerald-300/80 dark:border-emerald-400/20 bg-emerald-50 dark:bg-emerald-400/10 text-emerald-800 dark:text-emerald-300', iconColor: 'text-emerald-600 dark:text-emerald-400' },
+  { key: 'recommendation', label: 'Recommendation', icon: Sparkles, badge: 'border-fuchsia-300/80 dark:border-fuchsia-400/20 bg-fuchsia-50 dark:bg-fuchsia-400/10 text-fuchsia-800 dark:text-fuchsia-300', iconColor: 'text-fuchsia-600 dark:text-fuchsia-400' },
+  { key: 'other', label: 'Other', icon: Box, badge: 'border-slate-300/80 dark:border-slate-400/20 bg-slate-50 dark:bg-slate-400/10 text-slate-700 dark:text-slate-300', iconColor: 'text-slate-600 dark:text-slate-400' },
 ];
 
 const GOVERNANCE_TIPS = [
@@ -99,7 +99,7 @@ export default function Models() {
             <select className="input" value={form.domain} onChange={(e) => setForm({ ...form, domain: e.target.value })}>
               {['credit_risk', 'fraud', 'nlp', 'vision', 'forecasting', 'recommendation', 'other'].map((d) => <option key={d} value={d}>{d.replace('_', ' ')}</option>)}
             </select>
-            <label className="flex items-center gap-2.5 rounded-xl border border-white/10 bg-night-950/50 px-3.5 text-sm text-slate-300">
+            <label className="flex items-center gap-2.5 rounded-xl border border-slate-200 dark:border-white/10 bg-slate-50 dark:bg-night-950/50 px-3.5 text-sm text-slate-700 dark:text-slate-300">
               <input
                 type="checkbox"
                 className="h-4 w-4 accent-brand-500"
@@ -119,34 +119,34 @@ export default function Models() {
         {models.map((m) => (
           <Link key={m._id} to={`/models/${m._id}`} className="card card-hover group p-5">
             <div className="mb-2 flex items-start justify-between gap-2">
-              <h3 className="font-semibold leading-tight text-slate-50 transition-colors group-hover:text-brand-200">{m.name}</h3>
+              <h3 className="font-semibold leading-tight text-slate-900 dark:text-slate-50 transition-colors group-hover:text-brand-600 dark:group-hover:text-brand-200">{m.name}</h3>
               <RiskBadge tier={m.riskTier} />
             </div>
-            <p className="mb-4 line-clamp-2 text-sm text-slate-400">{m.description}</p>
-            <div className="flex items-center justify-between text-xs text-slate-500">
-              <span>Owner: <span className="text-slate-400">{m.ownerName}</span></span>
+            <p className="mb-4 line-clamp-2 text-sm text-slate-600 dark:text-slate-400">{m.description}</p>
+            <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+              <span>Owner: <span className="font-medium text-slate-700 dark:text-slate-300">{m.ownerName}</span></span>
               <span>{m.versionCount} version{m.versionCount === 1 ? '' : 's'}</span>
             </div>
             {m.currentVersion && (
-              <div className="mt-3.5 flex items-center justify-between border-t border-white/[0.07] pt-3.5">
-                <span className="font-mono text-sm font-semibold text-brand-300">v{m.currentVersion.version}</span>
+              <div className="mt-3.5 flex items-center justify-between border-t border-slate-200/80 dark:border-white/[0.07] pt-3.5">
+                <span className="font-mono text-sm font-semibold text-brand-700 dark:text-brand-300">v{m.currentVersion.version}</span>
                 <StatusBadge status={m.currentVersion.status} />
               </div>
             )}
-            <span className="mt-3 inline-flex translate-x-0 items-center gap-1 text-xs font-semibold text-transparent transition-all duration-300 group-hover:translate-x-1 group-hover:text-brand-300">
+            <span className="mt-3 inline-flex translate-x-0 items-center gap-1 text-xs font-semibold text-brand-600 dark:text-transparent transition-all duration-300 group-hover:translate-x-1 dark:group-hover:text-brand-300">
               Open model <ArrowUpRight size={12} className="transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </span>
           </Link>
         ))}
-        {models.length === 0 && !error && <p className="text-sm text-slate-500">No models registered yet.</p>}
+        {models.length === 0 && !error && <p className="text-sm text-slate-600 dark:text-slate-400">No models registered yet.</p>}
       </div>
 
       {/* Fill remaining space with useful info */}
       <div className="flex-1" />
       <div className="mt-6 grid gap-4 lg:grid-cols-3">
         {/* Card 1: Model Lifecycle */}
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] px-5 py-5 backdrop-blur-sm">
-          <h3 className="mb-3 text-sm font-semibold text-slate-300">Model Lifecycle</h3>
+        <div className="rounded-2xl border border-slate-200 dark:border-white/[0.06] bg-slate-50/70 dark:bg-white/[0.03] px-5 py-5 backdrop-blur-sm">
+          <h3 className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-300">Model Lifecycle</h3>
           <div className="flex flex-wrap items-center gap-1.5 py-1">
             {LIFECYCLE_STAGES.map((stage, idx) => (
               <div key={stage.label} className="flex items-center gap-1.5">
@@ -155,17 +155,17 @@ export default function Models() {
                   {stage.label}
                 </span>
                 {idx < LIFECYCLE_STAGES.length - 1 && (
-                  <ArrowRight size={12} className="shrink-0 text-slate-600" />
+                  <ArrowRight size={12} className="shrink-0 text-slate-400 dark:text-slate-600" />
                 )}
               </div>
             ))}
           </div>
-          <p className="mt-3 text-xs text-slate-500">Each transition is logged in the audit trail</p>
+          <p className="mt-3 text-xs text-slate-600 dark:text-slate-500">Each transition is logged in the audit trail</p>
         </div>
 
         {/* Card 2: Supported Domains */}
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] px-5 py-5 backdrop-blur-sm">
-          <h3 className="mb-3 text-sm font-semibold text-slate-300">Supported Domains</h3>
+        <div className="rounded-2xl border border-slate-200 dark:border-white/[0.06] bg-slate-50/70 dark:bg-white/[0.03] px-5 py-5 backdrop-blur-sm">
+          <h3 className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-300">Supported Domains</h3>
           <div className="flex flex-wrap gap-2">
             {SUPPORTED_DOMAINS.map((domain) => {
               const Icon = domain.icon;
@@ -183,11 +183,11 @@ export default function Models() {
         </div>
 
         {/* Card 3: Governance Tips */}
-        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] px-5 py-5 backdrop-blur-sm">
-          <h3 className="mb-3 text-sm font-semibold text-slate-300">Governance Tips</h3>
+        <div className="rounded-2xl border border-slate-200 dark:border-white/[0.06] bg-slate-50/70 dark:bg-white/[0.03] px-5 py-5 backdrop-blur-sm">
+          <h3 className="mb-3 text-sm font-semibold text-slate-900 dark:text-slate-300">Governance Tips</h3>
           <div className="space-y-2">
             {GOVERNANCE_TIPS.map((tip) => (
-              <p key={tip} className="flex items-start gap-2 text-sm text-slate-500">
+              <p key={tip} className="flex items-start gap-2 text-sm text-slate-700 dark:text-slate-400">
                 <span className="shrink-0">💡</span>
                 <span>{tip}</span>
               </p>

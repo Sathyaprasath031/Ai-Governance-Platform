@@ -12,9 +12,7 @@ import {
   FileText,
   Users,
   Sparkles,
-  UserCheck,
   ShieldCheck,
-  Lock,
   Eye,
   Info,
 } from 'lucide-react';
@@ -25,21 +23,21 @@ import { useAuth } from '../context/AuthContext';
 const RISK_BAR = {
   critical: 'from-rose-500 to-pink-500',
   high: 'from-orange-400 to-rose-400',
-  medium: 'from-amber-300 to-orange-400',
+  medium: 'from-amber-400 to-orange-400',
   low: 'from-emerald-400 to-teal-400',
 };
 
 const KPI_TINTS = {
-  brand: 'from-brand-500/25 to-brand-500/5 text-brand-600 dark:text-brand-300',
-  sky: 'from-sky-500/25 to-sky-500/5 text-sky-600 dark:text-sky-300',
-  amber: 'from-amber-500/25 to-amber-500/5 text-amber-600 dark:text-amber-300',
-  rose: 'from-rose-500/25 to-rose-500/5 text-rose-600 dark:text-rose-300',
+  brand: 'from-brand-500/25 to-brand-500/5 text-brand-700 dark:text-brand-300',
+  sky: 'from-sky-500/25 to-sky-500/5 text-sky-700 dark:text-sky-300',
+  amber: 'from-amber-500/25 to-amber-500/5 text-amber-800 dark:text-amber-300',
+  rose: 'from-rose-500/25 to-rose-500/5 text-rose-700 dark:text-rose-300',
 };
 
 const ROLE_PROFILES = {
   admin: {
     title: 'Administrator',
-    badge: 'border-purple-400/30 bg-purple-500/15 text-purple-300',
+    badge: 'border-purple-300 bg-purple-50 text-purple-800 dark:border-purple-400/40 dark:bg-purple-500/15 dark:text-purple-300',
     icon: ShieldCheck,
     summary: 'Full control over all platform assets, approval workflows, policies, and audit trails.',
     permissions: ['Create & Edit Models', 'Submit Versions', 'Approve/Reject Deployments', 'Full Audit Log Access', 'Policy Override'],
@@ -47,7 +45,7 @@ const ROLE_PROFILES = {
   },
   model_owner: {
     title: 'Model Owner',
-    badge: 'border-blue-400/30 bg-blue-500/15 text-blue-300',
+    badge: 'border-blue-300 bg-blue-50 text-blue-800 dark:border-blue-400/40 dark:bg-blue-500/15 dark:text-blue-300',
     icon: Boxes,
     summary: 'Lead engineer or scientist responsible for model training, metadata documentation, and versioning.',
     permissions: ['Register New Models', 'Upload Version Artifacts', 'Submit Candidates for Review', 'Track Deployment Pipeline'],
@@ -55,7 +53,7 @@ const ROLE_PROFILES = {
   },
   reviewer: {
     title: 'Reviewer',
-    badge: 'border-amber-400/30 bg-amber-500/15 text-amber-300',
+    badge: 'border-amber-300 bg-amber-50 text-amber-800 dark:border-amber-400/40 dark:bg-amber-500/15 dark:text-amber-300',
     icon: ClipboardCheck,
     summary: 'Designated risk or compliance validator authorized to sign off on production deployments.',
     permissions: ['Inspect Release Candidates', 'Evaluate Bias & Drift Metrics', 'Record Official Approval / Rejection', 'Add Governance Comments'],
@@ -63,7 +61,7 @@ const ROLE_PROFILES = {
   },
   auditor: {
     title: 'Auditor',
-    badge: 'border-emerald-400/30 bg-emerald-500/15 text-emerald-300',
+    badge: 'border-emerald-300 bg-emerald-50 text-emerald-800 dark:border-emerald-400/40 dark:bg-emerald-500/15 dark:text-emerald-300',
     icon: Eye,
     summary: 'Compliance or risk officer verifying immutable records, policy adherence, and chain of custody.',
     permissions: ['Full Cryptographic Audit Log', 'Trace Model Lineage', 'Export Verification Proofs', 'Inspect Version History'],
@@ -71,7 +69,7 @@ const ROLE_PROFILES = {
   },
   viewer: {
     title: 'Viewer',
-    badge: 'border-slate-400/30 bg-slate-500/15 text-slate-300',
+    badge: 'border-slate-300 bg-slate-100 text-slate-800 dark:border-slate-400/40 dark:bg-slate-500/15 dark:text-slate-300',
     icon: Info,
     summary: 'Stakeholder with read-only visibility into the inventory, status, and governance metrics.',
     permissions: ['View Model Registry', 'Inspect Risk Classifications', 'Check Approval Queue Status', 'Review Public Metrics'],
@@ -118,10 +116,10 @@ export default function Dashboard() {
   const RoleIcon = currentRole.icon;
 
   const kpis = [
-    { label: 'Models governed', value: total, icon: Boxes, tint: KPI_TINTS.brand, bar: 'bg-brand-400/50' },
-    { label: 'In production', value: deployed, icon: Activity, tint: KPI_TINTS.sky, bar: 'bg-sky-400/50' },
-    { label: 'Open approvals', value: approvals.length, icon: ClipboardCheck, tint: KPI_TINTS.amber, bar: 'bg-amber-400/50' },
-    { label: 'At-risk versions', value: atRisk, icon: ShieldAlert, tint: KPI_TINTS.rose, bar: 'bg-rose-400/50' },
+    { label: 'Models governed', value: total, icon: Boxes, tint: KPI_TINTS.brand, bar: 'bg-brand-500' },
+    { label: 'In production', value: deployed, icon: Activity, tint: KPI_TINTS.sky, bar: 'bg-sky-500' },
+    { label: 'Open approvals', value: approvals.length, icon: ClipboardCheck, tint: KPI_TINTS.amber, bar: 'bg-amber-500' },
+    { label: 'At-risk versions', value: atRisk, icon: ShieldAlert, tint: KPI_TINTS.rose, bar: 'bg-rose-500' },
   ];
 
   return (
@@ -134,8 +132,8 @@ export default function Dashboard() {
           <p className="page-sub">Lifecycle state, approvals and risk across your AI estate.</p>
         </div>
         {user && (
-          <div className="flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-1.5 backdrop-blur-sm">
-            <span className="text-xs text-slate-400">Signed in as:</span>
+          <div className="flex items-center gap-2 rounded-xl border border-slate-200 bg-white/90 dark:border-white/10 dark:bg-white/[0.04] px-3.5 py-1.5 shadow-sm dark:shadow-none backdrop-blur-sm">
+            <span className="text-xs text-slate-600 dark:text-slate-400">Signed in as:</span>
             <span className={`inline-flex items-center gap-1.5 rounded-lg border px-2.5 py-0.5 text-xs font-semibold ${currentRole.badge}`}>
               <RoleIcon size={13} />
               {currentRole.title}
@@ -146,7 +144,7 @@ export default function Dashboard() {
 
       {/* Role-Specific Active Workspace Banner */}
       {user && (
-        <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-r from-brand-950/40 via-white/[0.03] to-fuchsia-950/20 p-5 backdrop-blur-md">
+        <div className="relative overflow-hidden rounded-2xl border border-brand-200 dark:border-brand-500/25 bg-gradient-to-r from-brand-50/80 via-purple-50/40 to-fuchsia-50/80 dark:from-brand-950/40 dark:via-white/[0.03] dark:to-fuchsia-950/20 p-5 shadow-sm dark:shadow-none backdrop-blur-md">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-start gap-3.5">
               <span className={`mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-xl border ${currentRole.badge}`}>
@@ -154,13 +152,13 @@ export default function Dashboard() {
               </span>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="text-base font-bold text-white">Your Workspace Role: {currentRole.title}</h2>
-                  <span className="text-xs text-slate-400">({user.name})</span>
+                  <h2 className="text-base font-bold text-slate-900 dark:text-white">Your Workspace Role: {currentRole.title}</h2>
+                  <span className="text-xs text-slate-600 dark:text-slate-400">({user.name})</span>
                 </div>
-                <p className="mt-1 text-xs leading-relaxed text-slate-300/90">{currentRole.summary}</p>
+                <p className="mt-1 text-xs leading-relaxed text-slate-700 dark:text-slate-300">{currentRole.summary}</p>
                 <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-                  <span className="text-[11px] font-medium text-slate-400">Key Focus:</span>
-                  <span className="rounded-md border border-white/[0.08] bg-white/[0.04] px-2 py-0.5 text-[11px] text-slate-300">
+                  <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">Key Focus:</span>
+                  <span className="rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-medium text-slate-800 dark:border-white/[0.08] dark:bg-white/[0.04] dark:text-slate-300 shadow-sm dark:shadow-none">
                     {currentRole.focus}
                   </span>
                 </div>
@@ -194,12 +192,12 @@ export default function Dashboard() {
           <div key={label} className="card card-hover group relative overflow-hidden p-4">
             <div className={`absolute inset-x-0 top-0 h-[2.5px] bg-gradient-to-r ${bar} opacity-70 transition-all duration-300 group-hover:opacity-100 group-hover:shadow-[0_0_12px_rgba(139,92,246,0.6)]`} />
             <div className="flex items-center gap-3.5">
-              <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-white/10 bg-gradient-to-br ${tint} transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3`}>
+              <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-slate-200/80 dark:border-white/10 bg-gradient-to-br ${tint} transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3`}>
                 <Icon size={21} className="transition-transform duration-300 group-hover:scale-110" />
               </span>
               <div>
-                <div className="text-2xl font-bold tracking-tight text-white">{value}</div>
-                <div className="text-xs font-medium text-slate-400">{label}</div>
+                <div className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">{value}</div>
+                <div className="text-xs font-semibold text-slate-600 dark:text-slate-400">{label}</div>
               </div>
             </div>
           </div>
@@ -214,13 +212,13 @@ export default function Dashboard() {
             {riskCounts.map(({ tier, n }) => (
               <div key={tier} className="flex items-center gap-3">
                 <div className="w-24 shrink-0"><RiskBadge tier={tier} /></div>
-                <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-white/[0.06]">
+                <div className="h-2.5 flex-1 overflow-hidden rounded-full bg-slate-200/80 dark:bg-white/[0.06]">
                   <div
                     className={`h-full rounded-full bg-gradient-to-r ${RISK_BAR[tier]} shadow-[0_0_12px_-2px_rgba(139,92,246,0.4)] transition-all duration-500`}
                     style={{ width: `${total ? (n / total) * 100 : 0}%` }}
                   />
                 </div>
-                <div className="w-8 shrink-0 text-right text-sm font-semibold tabular-nums text-slate-200">{n}</div>
+                <div className="w-8 shrink-0 text-right text-sm font-semibold tabular-nums text-slate-900 dark:text-slate-200">{n}</div>
               </div>
             ))}
           </div>
@@ -234,19 +232,19 @@ export default function Dashboard() {
               View all <ArrowUpRight size={12} />
             </Link>
           </div>
-          {approvals.length === 0 && <p className="text-sm text-slate-500">Queue is clear ✅</p>}
+          {approvals.length === 0 && <p className="text-sm text-slate-600 dark:text-slate-500">Queue is clear ✅</p>}
           <div className="space-y-1.5">
             {approvals.slice(0, 4).map((a) => (
               <Link
                 key={a._id}
                 to={`/models/${a.model}`}
-                className="block rounded-xl border border-transparent p-2.5 transition-colors hover:border-white/10 hover:bg-white/[0.05]"
+                className="block rounded-xl border border-transparent p-2.5 transition-colors hover:border-slate-200 hover:bg-slate-50 dark:hover:border-white/10 dark:hover:bg-white/[0.05]"
               >
-                <div className="flex items-center gap-2 text-sm font-semibold text-slate-100">
-                  <span className="font-mono text-brand-300">v{a.version?.version}</span>
-                  <span className="badge border-rose-400/25 bg-rose-400/10 text-rose-700 dark:text-rose-300">{a.riskTier}</span>
+                <div className="flex items-center gap-2 text-sm font-semibold text-slate-900 dark:text-slate-100">
+                  <span className="font-mono text-brand-700 dark:text-brand-300">v{a.version?.version}</span>
+                  <span className="badge border-rose-200 bg-rose-50 text-rose-800 dark:border-rose-400/30 dark:bg-rose-400/10 dark:text-rose-300">{a.riskTier}</span>
                 </div>
-                <div className="mt-0.5 text-xs text-slate-500">
+                <div className="mt-0.5 text-xs text-slate-600 dark:text-slate-500">
                   {a.approvals.length}/{a.requiredApprovals} approvals · by {a.requestedBy?.name || 'unknown'}
                 </div>
               </Link>
@@ -264,14 +262,14 @@ export default function Dashboard() {
             </Link>
           </div>
           <div className="space-y-1">
-            {audit.length === 0 && <p className="text-sm text-slate-500">No activity yet.</p>}
+            {audit.length === 0 && <p className="text-sm text-slate-600 dark:text-slate-500">No activity yet.</p>}
             {audit.map((e) => (
-              <div key={e._id} className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5 rounded-lg px-2 py-1.5 text-sm transition-colors hover:bg-white/[0.04]">
-                <span className="w-full font-mono text-[11px] text-slate-500 sm:w-36 sm:shrink-0">
+              <div key={e._id} className="flex flex-wrap items-baseline gap-x-2.5 gap-y-0.5 rounded-lg px-2 py-1.5 text-sm transition-colors hover:bg-slate-100/70 dark:hover:bg-white/[0.04]">
+                <span className="w-full font-mono text-[11px] text-slate-500 dark:text-slate-500 sm:w-36 sm:shrink-0">
                   {new Date(e.createdAt).toLocaleString()}
                 </span>
-                <span className="font-semibold text-slate-200">{e.actorName}</span>
-                <span className="text-slate-400">
+                <span className="font-semibold text-slate-900 dark:text-slate-200">{e.actorName}</span>
+                <span className="text-slate-600 dark:text-slate-400">
                   {e.action} — {e.targetLabel}
                 </span>
               </div>
@@ -288,29 +286,29 @@ export default function Dashboard() {
         {/* LEFT card: Role & Permissions Matrix */}
         <div className="card p-5">
           <div className="mb-3 flex items-center justify-between">
-            <h3 className="card-title text-sm font-semibold text-slate-200">Role & Access Matrix</h3>
-            <span className="text-[11px] text-slate-500">RBAC Governance Model</span>
+            <h3 className="card-title text-sm font-semibold text-slate-900 dark:text-slate-200">Role & Access Matrix</h3>
+            <span className="text-[11px] font-semibold text-slate-500 dark:text-slate-400">RBAC Governance Model</span>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead>
-                <tr className="border-b border-white/[0.08] text-slate-400">
-                  <th className="py-2 font-medium">Role</th>
-                  <th className="py-2 text-center font-medium">Register</th>
-                  <th className="py-2 text-center font-medium">Submit</th>
-                  <th className="py-2 text-center font-medium">Approve</th>
-                  <th className="py-2 text-center font-medium">Audit</th>
+                <tr className="border-b border-slate-200 dark:border-white/[0.08] text-slate-600 dark:text-slate-400 font-semibold">
+                  <th className="py-2">Role</th>
+                  <th className="py-2 text-center">Register</th>
+                  <th className="py-2 text-center">Submit</th>
+                  <th className="py-2 text-center">Approve</th>
+                  <th className="py-2 text-center">Audit</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/[0.04] text-slate-300">
+              <tbody className="divide-y divide-slate-200 dark:divide-white/[0.04] text-slate-700 dark:text-slate-300">
                 {ROLE_MATRIX.map((r) => {
                   const isCurrent = user?.role && r.role.toLowerCase().replace(' ', '_') === user.role;
                   return (
-                    <tr key={r.role} className={isCurrent ? 'bg-brand-500/10 font-semibold text-brand-200' : ''}>
-                      <td className="py-2.5">
+                    <tr key={r.role} className={isCurrent ? 'bg-brand-50 font-semibold text-brand-800 dark:bg-brand-500/10 dark:text-brand-200' : ''}>
+                      <td className="py-2.5 font-medium">
                         <div className="flex items-center gap-1.5">
                           <span>{r.role}</span>
-                          {isCurrent && <span className="rounded bg-brand-400/20 px-1 text-[10px] text-brand-300">you</span>}
+                          {isCurrent && <span className="rounded bg-brand-200 px-1 text-[10px] text-brand-900 dark:bg-brand-400/20 dark:text-brand-300 font-bold">you</span>}
                         </div>
                       </td>
                       <td className="py-2.5 text-center">{r.register ? '✅' : '—'}</td>
@@ -327,22 +325,22 @@ export default function Dashboard() {
 
         {/* RIGHT card: Governance Readiness Checklist */}
         <div className="card p-5">
-          <h3 className="card-title mb-4 text-sm font-semibold text-slate-200">Governance Readiness</h3>
+          <h3 className="card-title mb-4 text-sm font-semibold text-slate-900 dark:text-slate-200">Governance Readiness</h3>
           <div className="space-y-2.5">
-            <div className="flex items-center gap-2.5 text-xs text-emerald-300/90">
-              <CheckCircle2 size={15} className="shrink-0 text-emerald-400" />
+            <div className="flex items-center gap-2.5 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
+              <CheckCircle2 size={15} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
               <span>Risk classification framework active (4 tiers: low to critical)</span>
             </div>
-            <div className="flex items-center gap-2.5 text-xs text-emerald-300/90">
-              <CheckCircle2 size={15} className="shrink-0 text-emerald-400" />
+            <div className="flex items-center gap-2.5 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
+              <CheckCircle2 size={15} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
               <span>Multi-reviewer approval policies enforced</span>
             </div>
-            <div className="flex items-center gap-2.5 text-xs text-emerald-300/90">
-              <CheckCircle2 size={15} className="shrink-0 text-emerald-400" />
+            <div className="flex items-center gap-2.5 text-xs font-semibold text-emerald-800 dark:text-emerald-300">
+              <CheckCircle2 size={15} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
               <span>Immutable cryptographic audit logging enabled</span>
             </div>
-            <div className="flex items-center gap-2.5 text-xs text-slate-400">
-              <Circle size={15} className="shrink-0 text-slate-500" />
+            <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-600 dark:text-slate-400">
+              <Circle size={15} className="shrink-0 text-slate-400 dark:text-slate-500" />
               <span>Continuous bias & fair-lending drift monitors configured</span>
             </div>
           </div>

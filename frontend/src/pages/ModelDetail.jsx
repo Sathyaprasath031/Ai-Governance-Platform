@@ -48,7 +48,7 @@ export default function ModelDetail() {
   if (!data)
     return (
       <div className="grid min-h-[40vh] place-items-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-white/15 border-t-brand-400" />
+        <div className="h-8 w-8 animate-spin rounded-full border-2 border-slate-300 dark:border-white/15 border-t-brand-600 dark:border-t-brand-400" />
       </div>
     );
 
@@ -58,7 +58,7 @@ export default function ModelDetail() {
 
   return (
     <div className="space-y-6">
-      <Link to="/models" className="inline-flex items-center gap-1 text-sm font-medium text-slate-400 transition-colors hover:text-brand-300">
+      <Link to="/models" className="inline-flex items-center gap-1 text-sm font-semibold text-slate-600 hover:text-brand-600 dark:text-slate-400 dark:hover:text-brand-300 transition-colors">
         <ArrowLeft size={14} /> Registry
       </Link>
 
@@ -67,17 +67,21 @@ export default function ModelDetail() {
           <div className="flex flex-wrap items-center gap-3">
             <h1 className="page-title">{model.name}</h1>
             <RiskBadge tier={model.riskTier} />
-            {model.regulated && <span className="badge bg-purple-400/10 text-purple-300 border-purple-400/25">regulated</span>}
+            {model.regulated && (
+              <span className="badge bg-purple-50 text-purple-800 border-purple-200 dark:bg-purple-400/10 dark:text-purple-300 dark:border-purple-400/25">
+                regulated
+              </span>
+            )}
           </div>
-          <p className="mt-1.5 max-w-2xl text-sm text-slate-400">{model.description}</p>
+          <p className="mt-1.5 max-w-2xl text-sm text-slate-600 dark:text-slate-400 leading-relaxed">{model.description}</p>
           {model.intendedUse && (
-            <p className="mt-1 text-xs text-slate-500">
-              <span className="font-semibold text-slate-400">Intended use:</span> {model.intendedUse}
+            <p className="mt-1 text-xs text-slate-600 dark:text-slate-400">
+              <span className="font-semibold text-slate-800 dark:text-slate-300">Intended use:</span> {model.intendedUse}
             </p>
           )}
         </div>
-        <div className="text-sm text-slate-500">
-          Owner: <span className="font-semibold text-slate-200">{model.ownerName}</span>
+        <div className="text-sm text-slate-600 dark:text-slate-400">
+          Owner: <span className="font-semibold text-slate-900 dark:text-slate-200">{model.ownerName}</span>
         </div>
       </div>
 
@@ -95,7 +99,7 @@ export default function ModelDetail() {
           </button>
           {newVersion && (
             <form
-              className="fade-up mt-4 space-y-3.5 border-t border-white/[0.07] pt-4"
+              className="fade-up mt-4 space-y-3.5 border-t border-slate-200 dark:border-white/[0.07] pt-4"
               onSubmit={async (e) => {
                 e.preventDefault();
                 setError('');
@@ -159,10 +163,10 @@ export default function ModelDetail() {
           <h2 className="card-title mb-3">Deployment history</h2>
           <div className="space-y-1.5 text-sm">
             {deployments.map((d) => (
-              <div key={d._id} className="flex flex-wrap gap-x-2 gap-y-0.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-white/[0.03]">
-                <span className="w-full font-mono text-[11px] text-slate-500 sm:w-40 sm:shrink-0">{new Date(d.createdAt).toLocaleString()}</span>
-                <span className="font-semibold text-slate-200">{d.environment}</span>
-                <span className="text-slate-500">
+              <div key={d._id} className="flex flex-wrap gap-x-2 gap-y-0.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-slate-100/70 dark:hover:bg-white/[0.03]">
+                <span className="w-full font-mono text-[11px] text-slate-500 dark:text-slate-400 sm:w-40 sm:shrink-0">{new Date(d.createdAt).toLocaleString()}</span>
+                <span className="font-semibold text-slate-900 dark:text-slate-200">{d.environment}</span>
+                <span className="text-slate-600 dark:text-slate-400">
                   by {d.deployerName} {d.active ? '· active' : '· superseded'}
                 </span>
               </div>
@@ -181,11 +185,11 @@ function VersionCard({ v, model, user, isOwner, canReview, onSubmit, onAct, comp
   return (
     <div className="card p-5">
       <div className="flex flex-wrap items-center gap-3">
-        <span className="rounded-lg border border-white/10 bg-white/[0.05] px-2.5 py-1 font-mono text-sm font-semibold text-brand-300">
+        <span className="rounded-lg border border-brand-200 bg-brand-50 text-brand-700 dark:border-white/10 dark:bg-white/[0.05] dark:text-brand-300 px-2.5 py-1 font-mono text-sm font-semibold">
           v{v.version}
         </span>
         <StatusBadge status={v.status} />
-        <span className="text-xs text-slate-500">{v.algorithm}</span>
+        <span className="text-xs font-medium text-slate-600 dark:text-slate-400">{v.algorithm}</span>
         <div className="flex-1" />
         <button className="btn-secondary" onClick={toggle}>{open ? 'Hide' : 'Details'}</button>
         {isOwner && v.status === 'draft' && (
@@ -202,19 +206,19 @@ function VersionCard({ v, model, user, isOwner, canReview, onSubmit, onAct, comp
         )}
       </div>
 
-      {v.changelog && <p className="mt-2.5 text-sm text-slate-400">{v.changelog}</p>}
+      {v.changelog && <p className="mt-2.5 text-sm text-slate-700 dark:text-slate-400 leading-relaxed">{v.changelog}</p>}
 
       {open && (
-        <div className="fade-up mt-4 space-y-5 border-t border-white/[0.07] pt-4">
+        <div className="fade-up mt-4 space-y-5 border-t border-slate-200 dark:border-white/[0.07] pt-4">
           <div className="grid gap-5 md:grid-cols-2">
             <div>
               <h4 className="eyebrow mb-2">Evaluation metrics</h4>
               <MetricsMap metrics={v.metrics} />
-              {v.trainingDataset && <p className="mt-2 text-xs text-slate-500">Data: {v.trainingDataset}</p>}
+              {v.trainingDataset && <p className="mt-2 text-xs text-slate-500 dark:text-slate-400">Data: {v.trainingDataset}</p>}
             </div>
             <div>
               <h4 className="eyebrow mb-2">Fairness assessment</h4>
-              {(!v.fairness || v.fairness.length === 0) && <p className="text-sm text-slate-500">No fairness metrics recorded.</p>}
+              {(!v.fairness || v.fairness.length === 0) && <p className="text-sm text-slate-500 dark:text-slate-400">No fairness metrics recorded.</p>}
               <div className="space-y-1.5">
                 {(v.fairness || []).map((f, i) => (
                   <FairnessRow key={i} f={f} />
@@ -230,15 +234,15 @@ function VersionCard({ v, model, user, isOwner, canReview, onSubmit, onAct, comp
               </h4>
               <div className="grid gap-1.5 sm:grid-cols-2">
                 {compliance.items.map((item) => (
-                  <div key={item.key} className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.03] px-3 py-1.5 text-sm">
+                  <div key={item.key} className="flex items-center gap-2 rounded-lg border border-slate-200 dark:border-white/[0.06] bg-slate-50/80 dark:bg-white/[0.03] px-3 py-1.5 text-sm">
                     {item.status === 'complete' ? (
-                      <CheckCircle2 size={15} className="shrink-0 text-emerald-400" />
+                      <CheckCircle2 size={15} className="shrink-0 text-emerald-600 dark:text-emerald-400" />
                     ) : item.status === 'pending' ? (
-                      <span className="h-[15px] w-[15px] shrink-0 rounded-full border-2 border-amber-400" />
+                      <span className="h-[15px] w-[15px] shrink-0 rounded-full border-2 border-amber-500 dark:border-amber-400" />
                     ) : (
-                      <span className="h-[15px] w-[15px] shrink-0 rounded border-2 border-slate-600" />
+                      <span className="h-[15px] w-[15px] shrink-0 rounded border-2 border-slate-400 dark:border-slate-600" />
                     )}
-                    <span className={item.status === 'complete' ? 'text-slate-200' : 'text-slate-400'}>
+                    <span className={item.status === 'complete' ? 'font-medium text-slate-900 dark:text-slate-200' : 'text-slate-600 dark:text-slate-400'}>
                       {COMPLIANCE_LABELS[item.key]}
                     </span>
                   </div>
@@ -254,11 +258,15 @@ function VersionCard({ v, model, user, isOwner, canReview, onSubmit, onAct, comp
               </h4>
               <div className="space-y-1 text-sm">
                 {monitoring.slice(0, 6).map((s) => (
-                  <div key={s._id} className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-white/[0.03]">
-                    <span className="w-full font-mono text-[11px] text-slate-500 sm:w-36 sm:shrink-0">{new Date(s.recordedAt).toLocaleString()}</span>
-                    <span className="tabular-nums text-slate-200">accuracy {(s.accuracy * 100).toFixed(1)}%</span>
-                    <span className="tabular-nums text-slate-500">drift {s.driftScore?.toFixed(2) ?? '—'}</span>
-                    {s.alert !== 'none' && <span className="badge bg-rose-400/15 text-rose-700 dark:text-rose-300 border-rose-400/30">{s.alert.replace('_', ' ')}</span>}
+                  <div key={s._id} className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5 rounded-lg px-2 py-1.5 transition-colors hover:bg-slate-100/70 dark:hover:bg-white/[0.03]">
+                    <span className="w-full font-mono text-[11px] text-slate-500 dark:text-slate-400 sm:w-36 sm:shrink-0">{new Date(s.recordedAt).toLocaleString()}</span>
+                    <span className="tabular-nums font-semibold text-slate-900 dark:text-slate-200">accuracy {(s.accuracy * 100).toFixed(1)}%</span>
+                    <span className="tabular-nums text-slate-600 dark:text-slate-400">drift {s.driftScore?.toFixed(2) ?? '—'}</span>
+                    {s.alert !== 'none' && (
+                      <span className="badge bg-rose-50 text-rose-800 border-rose-200 dark:bg-rose-400/15 dark:text-rose-300 dark:border-rose-400/30">
+                        {s.alert.replace('_', ' ')}
+                      </span>
+                    )}
                   </div>
                 ))}
               </div>
@@ -271,16 +279,16 @@ function VersionCard({ v, model, user, isOwner, canReview, onSubmit, onAct, comp
 }
 
 function MetricsMap({ metrics }) {
-  if (!metrics) return <p className="text-sm text-slate-500">No metrics.</p>;
+  if (!metrics) return <p className="text-sm text-slate-500 dark:text-slate-400">No metrics.</p>;
   const entries = metrics instanceof Map || typeof metrics.entries === 'function'
     ? [...metrics.entries()]
     : Object.entries(metrics);
-  if (entries.length === 0) return <p className="text-sm text-slate-500">No metrics.</p>;
+  if (entries.length === 0) return <p className="text-sm text-slate-500 dark:text-slate-400">No metrics.</p>;
   return (
     <div className="flex flex-wrap gap-2">
       {entries.map(([k, val]) => (
-        <span key={k} className="badge bg-white/[0.05] text-slate-300">
-          {k}: <span className="font-mono tabular-nums text-brand-300">{Number(val).toFixed(3)}</span>
+        <span key={k} className="badge bg-slate-100 text-slate-700 border-slate-200 dark:bg-white/[0.05] dark:text-slate-300 dark:border-white/10">
+          {k}: <span className="font-mono font-semibold tabular-nums text-brand-700 dark:text-brand-300">{Number(val).toFixed(3)}</span>
         </span>
       ))}
     </div>
@@ -292,8 +300,8 @@ function FairnessRow({ f }) {
   return (
     <div className="flex items-center gap-2 text-sm">
       <span>{pass ? '✅' : '❌'}</span>
-      <span className={pass ? 'text-slate-300 dark:text-slate-300' : 'font-medium text-rose-600 dark:text-rose-300'}>{FAIRNESS_LABELS[f.metric] || f.metric}</span>
-      <span className="font-mono text-xs tabular-nums text-slate-500">
+      <span className={pass ? 'text-slate-700 dark:text-slate-300' : 'font-medium text-rose-700 dark:text-rose-300'}>{FAIRNESS_LABELS[f.metric] || f.metric}</span>
+      <span className="font-mono text-xs tabular-nums text-slate-500 dark:text-slate-400">
         ({Number(f.value).toFixed(3)} vs limit {Number(f.threshold).toFixed(3)}){f.group ? ` · ${f.group}` : ''}
       </span>
     </div>
