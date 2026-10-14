@@ -104,11 +104,11 @@ html.light {
     overflow: hidden;
   }
   html.light .card {
-    background: linear-gradient(135deg, rgb(255 255 255 / 0.93), rgb(255 255 255 / 0.78));
-    border-color: rgb(15 23 42 / 0.1);
+    background: linear-gradient(135deg, rgb(255 255 255 / 0.86), rgb(255 255 255 / 0.70));
+    border-color: rgb(15 23 42 / 0.08);
     box-shadow:
-      0 8px 32px -14px rgba(76, 29, 149, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.9);
+      0 8px 32px -14px rgba(76, 29, 149, 0.16),
+      inset 0 1px 0 rgba(255, 255, 255, 0.95);
   }
 
   /* moving light-sweep on hover */
