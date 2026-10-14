@@ -1,8 +1,42 @@
 import { useEffect, useState } from 'react';
-import { CheckCircle2, XCircle } from 'lucide-react';
+import { CheckCircle2, XCircle, ShieldCheck, ArrowRight, GitPullRequest } from 'lucide-react';
 import api from '../api';
 import { RiskBadge } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
+
+const WORKFLOW_STEPS = [
+  {
+    num: 1,
+    title: 'Model owner submits version',
+    desc: 'Registers a new release candidate with changelog and artifacts.',
+    icon: GitPullRequest,
+  },
+  {
+    num: 2,
+    title: 'Risk tier determines required approvals',
+    desc: 'Policy engine evaluates model risk tier to set reviewer sign-off count.',
+    icon: ShieldCheck,
+  },
+  {
+    num: 3,
+    title: 'Reviewers evaluate and decide',
+    desc: 'Designated reviewers inspect governance metrics and approve or reject.',
+    icon: CheckCircle2,
+  },
+  {
+    num: 4,
+    title: 'Version deployed or sent back',
+    desc: 'Approved releases unlock deployment; rejected releases return to draft.',
+    icon: ArrowRight,
+  },
+];
+
+const RISK_REQUIREMENTS = [
+  { tier: 'low', req: '1 approval needed' },
+  { tier: 'medium', req: '1 approval needed' },
+  { tier: 'high', req: '2 approvals needed' },
+  { tier: 'critical', req: '2+ approvals needed' },
+];
 
 export default function Approvals() {
   const { user, can } = useAuth();
@@ -30,7 +64,7 @@ export default function Approvals() {
   };
 
   return (
-    <div className="space-y-5">
+    <div className="flex min-h-[calc(100vh-10rem)] flex-col space-y-5">
       <div>
         <p className="eyebrow">Workflow</p>
         <h1 className="page-title">Approval Queue</h1>
@@ -96,6 +130,66 @@ export default function Approvals() {
             )}
           </div>
         ))}
+      </div>
+
+      {/* Push remaining space down and show helpful info */}
+      <div className="flex-1" />
+
+      <div className="mt-6 grid gap-4 lg:grid-cols-2">
+        {/* LEFT: Approval Workflow */}
+        <div className="card p-5">
+          <h3 className="card-title mb-4 text-sm font-semibold text-slate-200">Approval Workflow</h3>
+          <div className="space-y-0">
+            {WORKFLOW_STEPS.map((step, idx) => {
+              const Icon = step.icon;
+              const isLast = idx === WORKFLOW_STEPS.length - 1;
+              return (
+                <div key={idx} className="flex gap-3">
+                  <div className="flex flex-col items-center">
+                    <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-brand-500 to-fuchsia-500 text-xs font-bold text-white shadow-sm">
+                      {step.num}
+                    </div>
+                    {!isLast && (
+                      <div className="my-1 w-px flex-1 border-l border-dashed border-white/20" />
+                    )}
+                  </div>
+                  <div className={`pt-0.5 ${!isLast ? 'pb-4' : ''}`}>
+                    <div className="flex items-center gap-2">
+                      <Icon size={14} className="text-brand-300/80 shrink-0" />
+                      <span className="text-sm font-medium text-slate-200">{step.title}</span>
+                    </div>
+                    <p className="mt-0.5 text-xs text-slate-500 leading-relaxed">{step.desc}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* RIGHT: Approval Requirements by Risk */}
+        <div className="card flex flex-col justify-between p-5">
+          <div>
+            <h3 className="card-title mb-4 text-sm font-semibold text-slate-200">
+              Approval Requirements by Risk
+            </h3>
+            <div>
+              {RISK_REQUIREMENTS.map((r, i) => (
+                <div
+                  key={r.tier}
+                  className={`flex items-center justify-between py-2.5 ${
+                    i < RISK_REQUIREMENTS.length - 1 ? 'border-b border-white/[0.06]' : ''
+                  }`}
+                >
+                  <RiskBadge tier={r.tier} />
+                  <span className="text-xs font-medium text-slate-300">{r.req}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="mt-4 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 text-xs text-slate-400">
+            <span className="font-semibold text-slate-300">Note:</span> Approvals are final and recorded in the immutable audit trail.
+          </div>
+        </div>
       </div>
     </div>
   );

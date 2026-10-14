@@ -10,6 +10,15 @@ const ACTION_COLORS = {
   'monitoring.record': 'bg-slate-400/10 text-slate-600 dark:text-slate-300 border-slate-400/20',
 };
 
+const ACTION_DEFINITIONS = [
+  { action: 'deployed', desc: 'Model deployed to production or staging' },
+  { action: 'approval.decide', desc: 'Reviewer decision or approval granted' },
+  { action: 'approval.reject', desc: 'Deployment request rejected' },
+  { action: 'version.submit', desc: 'New model version registered for review' },
+  { action: 'compliance.update', desc: 'Compliance status or policy check updated' },
+  { action: 'monitoring.record', desc: 'Performance metric or drift record logged' },
+];
+
 export default function Audit() {
   const [entries, setEntries] = useState([]);
   const [error, setError] = useState('');
@@ -20,7 +29,7 @@ export default function Audit() {
   }, [limit]);
 
   return (
-    <div className="space-y-5">
+    <div className="flex min-h-[calc(100vh-10rem)] flex-col space-y-5">
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <p className="eyebrow">Compliance</p>
@@ -50,6 +59,44 @@ export default function Audit() {
             <span className="text-slate-400">{e.targetLabel}</span>
           </div>
         ))}
+      </div>
+
+      <div className="flex-1" />
+
+      <div className="mt-6 grid gap-4 lg:grid-cols-2">
+        {/* Tracked Actions */}
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] px-5 py-5 backdrop-blur-sm">
+          <h2 className="mb-3 text-sm font-semibold text-slate-300">Tracked Actions</h2>
+          <div className="space-y-2">
+            {ACTION_DEFINITIONS.map(({ action, desc }) => (
+              <div key={action} className="flex items-center gap-2 text-xs text-slate-400">
+                <span className={`badge ${ACTION_COLORS[action]}`}>
+                  {action}
+                </span>
+                <span>{desc}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Why Immutable Audit? */}
+        <div className="rounded-2xl border border-white/[0.06] bg-white/[0.03] px-5 py-5 backdrop-blur-sm">
+          <h2 className="mb-3 text-sm font-semibold text-slate-300">Why Immutable Audit?</h2>
+          <div className="space-y-3">
+            <div className="flex gap-2.5 text-sm text-slate-500">
+              <span className="shrink-0">🔒</span>
+              <span>Tamper-proof records for regulatory compliance</span>
+            </div>
+            <div className="flex gap-2.5 text-sm text-slate-500">
+              <span className="shrink-0">📋</span>
+              <span>Complete chain of custody for every model version</span>
+            </div>
+            <div className="flex gap-2.5 text-sm text-slate-500">
+              <span className="shrink-0">🔍</span>
+              <span>Instant forensic analysis when issues arise</span>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
