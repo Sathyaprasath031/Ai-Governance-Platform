@@ -58,40 +58,53 @@ export function AuthProvider({ children }) {
   };
 
   const loginWithGoogle = async (googleData) => {
-    // googleData: { email, name, picture, sub, credential, role }
-    try {
-      const d = await api('/auth/google', {
-        method: 'POST',
-        body: JSON.stringify(googleData),
-      });
-      if (d.token && d.user) {
-        localStorage.setItem('gov_token', d.token);
-        localStorage.setItem('gov_user', JSON.stringify(d.user));
-        localStorage.setItem('gov_last_email', d.user.email);
-        setUser(d.user);
-        return d.user;
-      }
-    } catch {
-      // Backend /auth/google not present or offline - proceed with authenticated Google profile session
-    }
-
+    // Immediately resolve and set the user without waiting for remote server roundtrips (0ms instant login)
     const resolvedUser = {
       id: googleData.sub || `google_${Date.now()}`,
       _id: googleData.sub || `google_${Date.now()}`,
-      name: googleData.name || googleData.email.split('@')[0],
-      email: googleData.email,
+      name: googleData.name || (googleData.email ? googleData.email.split('@')[0] : 'Google User'),
+      email: googleData.email || 'user@gmail.com',
       role: googleData.role || 'admin',
       avatar: googleData.picture,
       authProvider: 'google',
     };
 
     if (!localStorage.getItem('gov_token')) {
-      const sessionToken = btoa(JSON.stringify({ id: resolvedUser.id, email: resolvedUser.email, role: resolvedUser.role }));
+      const sessionToken = btoa(JSON.stringify({ id: resolvedUser.id, email: resolvedUser.email, role: resolvedUser.role, iat: Date.now() }));
       localStorage.setItem('gov_token', sessionToken);
     }
     localStorage.setItem('gov_user', JSON.stringify(resolvedUser));
-    localStorage.setItem('gov_last_email', resolvedUser.email);
+    if (resolvedUser.email) {
+      localStorage.setItem('gov_last_email', resolvedUser.email);
+      localStorage.setItem('gov_last_google_email', resolvedUser.email);
+    }
+    if (resolvedUser.name) {
+      localStorage.setItem('gov_last_google_name', resolvedUser.name);
+    }
     setUser(resolvedUser);
+
+    // Non-blocking background sync if backend has google auth endpoint (with fast 1s timeout, fire-and-forget)
+    try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 1000);
+      api('/auth/google', {
+        method: 'POST',
+        body: JSON.stringify(googleData),
+        signal: controller.signal,
+      })
+        .then((d) => {
+          if (d?.token && d?.user) {
+            localStorage.setItem('gov_token', d.token);
+            localStorage.setItem('gov_user', JSON.stringify(d.user));
+            setUser(d.user);
+          }
+        })
+        .catch(() => {})
+        .finally(() => clearTimeout(timeoutId));
+    } catch {
+      // Ignore background sync errors
+    }
+
     return resolvedUser;
   };
 
