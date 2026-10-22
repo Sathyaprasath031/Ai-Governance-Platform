@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import api from '../api';
+import { saveRegisteredAccount } from '../utils/accountStorage';
 
 const AuthContext = createContext(null);
 
@@ -41,6 +42,7 @@ export function AuthProvider({ children }) {
     localStorage.setItem('gov_token', d.token);
     localStorage.setItem('gov_user', JSON.stringify(d.user));
     localStorage.setItem('gov_last_email', email);
+    saveRegisteredAccount(d.user || { email });
     setUser(d.user);
     return d.user;
   };
@@ -53,6 +55,7 @@ export function AuthProvider({ children }) {
     localStorage.setItem('gov_token', d.token);
     localStorage.setItem('gov_user', JSON.stringify(d.user));
     localStorage.setItem('gov_last_email', email);
+    saveRegisteredAccount(d.user || { name, email, role });
     setUser(d.user);
     return d.user;
   };
@@ -81,6 +84,7 @@ export function AuthProvider({ children }) {
     if (resolvedUser.name) {
       localStorage.setItem('gov_last_google_name', resolvedUser.name);
     }
+    saveRegisteredAccount(resolvedUser);
     setUser(resolvedUser);
 
     // Non-blocking background sync if backend has google auth endpoint (with fast 1s timeout, fire-and-forget)

@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { ShieldCheck, UserCheck, Check, ArrowRight, Plus, X } from 'lucide-react';
+import { ArrowRight, Plus, X, Trash2, UserPlus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import {
+  getRegisteredAccounts,
+  saveRegisteredAccount,
+  removeRegisteredAccount,
+  getRoleTitle,
+  getAvatarColor,
+} from '../utils/accountStorage';
 
 function parseJwt(token) {
   try {
@@ -19,63 +26,31 @@ function parseJwt(token) {
   }
 }
 
-const DEFAULT_ACCOUNTS = [
-  {
-    name: 'Sathya Prasath',
-    email: 'sathyaprasath031@gmail.com',
-    role: 'admin',
-    roleTitle: 'Platform Administrator',
-    color: 'bg-purple-600 text-white',
-  },
-  {
-    name: 'Alex Turner',
-    email: 'alex.turner@enterprise.ai',
-    role: 'model_owner',
-    roleTitle: 'Model Owner / ML Lead',
-    color: 'bg-blue-600 text-white',
-  },
-  {
-    name: 'Elena Rostova',
-    email: 'elena.rostova@riskreview.io',
-    role: 'reviewer',
-    roleTitle: 'Model Risk Reviewer',
-    color: 'bg-amber-600 text-white',
-  },
-  {
-    name: 'Marcus Chen',
-    email: 'marcus.chen@complianceaudit.org',
-    role: 'auditor',
-    roleTitle: 'Compliance Auditor',
-    color: 'bg-emerald-600 text-white',
-  },
-];
-
-export default function GoogleAuthButton({ text = 'Continue with Google', role = 'admin', onSuccess, onError }) {
+export default function GoogleAuthButton({
+  text = 'Continue with Google',
+  role = 'admin',
+  onSuccess,
+  onError,
+}) {
   const { loginWithGoogle } = useAuth();
   const [loading, setLoading] = useState(false);
   const [showChooser, setShowChooser] = useState(false);
   const [showAddCustom, setShowAddCustom] = useState(false);
+  const [registeredAccounts, setRegisteredAccounts] = useState([]);
   const [customEmail, setCustomEmail] = useState('');
   const [customName, setCustomName] = useState('');
   const [customRole, setCustomRole] = useState(role);
 
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
-  // Build list of accounts: if user has a previously registered email, place it first
-  const rememberedEmail = localStorage.getItem('gov_last_google_email') || localStorage.getItem('gov_last_email');
-  const rememberedName = localStorage.getItem('gov_last_google_name');
-
-  const accountsList = [...DEFAULT_ACCOUNTS];
-  if (rememberedEmail && !accountsList.some((a) => a.email.toLowerCase() === rememberedEmail.toLowerCase())) {
-    accountsList.unshift({
-      name: rememberedName || rememberedEmail.split('@')[0],
-      email: rememberedEmail,
-      role: 'admin',
-      roleTitle: 'Registered Workspace User',
-      color: 'bg-gradient-to-br from-brand-600 to-fuchsia-600 text-white',
-      isLastUsed: true,
-    });
-  }
+  // Reload registered accounts whenever chooser opens
+  const refreshAccounts = () => {
+    const list = getRegisteredAccounts();
+    setRegisteredAccounts(list);
+    if (list.length === 0) {
+      setShowAddCustom(true);
+    }
+  };
 
   useEffect(() => {
     // If client ID is provided and Google GIS script is loaded, initialize it
@@ -88,14 +63,16 @@ export default function GoogleAuthButton({ text = 'Continue with Google', role =
               setLoading(true);
               try {
                 const payload = parseJwt(response.credential);
-                const user = await loginWithGoogle({
+                const userObj = {
                   credential: response.credential,
                   email: payload?.email,
                   name: payload?.name,
                   picture: payload?.picture,
                   sub: payload?.sub,
                   role,
-                });
+                };
+                saveRegisteredAccount(userObj);
+                const user = await loginWithGoogle(userObj);
                 setShowChooser(false);
                 onSuccess?.(user);
               } catch (err) {
@@ -113,6 +90,7 @@ export default function GoogleAuthButton({ text = 'Continue with Google', role =
   }, [clientId, role]);
 
   const handleOpenChooser = () => {
+    refreshAccounts();
     // If Google GIS client is fully configured, trigger native prompt
     if (clientId && window.google?.accounts?.id) {
       try {
@@ -121,17 +99,18 @@ export default function GoogleAuthButton({ text = 'Continue with Google', role =
         console.warn('Google prompt fallback:', err);
       }
     }
-    // Always display the Google Account Chooser modal so user can pick between accounts
     setShowChooser(true);
   };
 
   const handleSelectAccount = async (account) => {
     setLoading(true);
     try {
+      saveRegisteredAccount(account);
       const user = await loginWithGoogle({
         email: account.email,
         name: account.name,
         role: account.role || role,
+        avatar: account.avatar,
       });
       setShowChooser(false);
       onSuccess?.(user);
@@ -147,17 +126,27 @@ export default function GoogleAuthButton({ text = 'Continue with Google', role =
     if (!customEmail) return;
     setLoading(true);
     try {
-      const user = await loginWithGoogle({
-        email: customEmail,
-        name: customName || customEmail.split('@')[0],
+      const newAccount = {
+        email: customEmail.trim(),
+        name: customName.trim() || customEmail.split('@')[0],
         role: customRole,
-      });
+      };
+      saveRegisteredAccount(newAccount);
+      const user = await loginWithGoogle(newAccount);
       setShowChooser(false);
       onSuccess?.(user);
     } catch (err) {
       onError?.(err.message || 'Failed to authenticate');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRemoveAccount = (email) => {
+    const updated = removeRegisteredAccount(email);
+    setRegisteredAccounts(updated);
+    if (updated.length === 0) {
+      setShowAddCustom(true);
     }
   };
 
@@ -244,43 +233,75 @@ export default function GoogleAuthButton({ text = 'Continue with Google', role =
                 </p>
               </div>
 
-              {/* Accounts List */}
-              <div className="mt-5 divide-y divide-slate-100 dark:divide-white/[0.06] border-y border-slate-200 dark:border-white/10 max-h-72 overflow-y-auto no-scrollbar">
-                {accountsList.map((account) => (
-                  <button
-                    key={account.email}
-                    type="button"
-                    onClick={() => handleSelectAccount(account)}
-                    className="flex w-full items-center gap-3.5 py-3 px-2 text-left hover:bg-slate-50 dark:hover:bg-white/[0.05] transition-colors rounded-xl"
-                  >
-                    {/* Account Avatar */}
-                    <div className={`grid h-10 w-10 shrink-0 place-items-center rounded-full font-bold text-sm shadow-sm ${account.color}`}>
-                      {account.name[0]?.toUpperCase() || 'G'}
-                    </div>
+              {/* Accounts List (Only previously and currently registered accounts) */}
+              {registeredAccounts.length > 0 ? (
+                <div className="mt-5 divide-y divide-slate-100 dark:divide-white/[0.06] border-y border-slate-200 dark:border-white/10 max-h-72 overflow-y-auto no-scrollbar">
+                  {registeredAccounts.map((account, index) => (
+                    <div
+                      key={account.email}
+                      className="group flex w-full items-center justify-between py-2.5 px-2 hover:bg-slate-50 dark:hover:bg-white/[0.05] transition-colors rounded-xl"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => handleSelectAccount(account)}
+                        className="flex min-w-0 flex-1 items-center gap-3.5 text-left"
+                      >
+                        {/* Avatar */}
+                        <div
+                          className={`grid h-10 w-10 shrink-0 place-items-center rounded-full font-bold text-sm shadow-sm ${getAvatarColor(
+                            account.email
+                          )}`}
+                        >
+                          {account.name?.[0]?.toUpperCase() || 'U'}
+                        </div>
 
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-1.5">
-                        <span className="truncate text-sm font-semibold text-slate-900 dark:text-white">
-                          {account.name}
-                        </span>
-                        {account.isLastUsed && (
-                          <span className="rounded-full bg-brand-100 px-2 py-0.2 text-[10px] font-bold text-brand-800 dark:bg-brand-500/20 dark:text-brand-300">
-                            Recent
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-1.5">
+                            <span className="truncate text-sm font-semibold text-slate-900 dark:text-white">
+                              {account.name}
+                            </span>
+                            {index === 0 && (
+                              <span className="rounded-full bg-brand-100 px-2 py-0.2 text-[10px] font-bold text-brand-800 dark:bg-brand-500/20 dark:text-brand-300">
+                                Recent
+                              </span>
+                            )}
+                          </div>
+                          <p className="truncate text-xs text-slate-600 dark:text-slate-400">
+                            {account.email}
+                          </p>
+                          <span className="text-[10px] font-medium text-slate-500 dark:text-slate-500">
+                            Role: {getRoleTitle(account.role)}
                           </span>
-                        )}
-                      </div>
-                      <p className="truncate text-xs text-slate-600 dark:text-slate-400">
-                        {account.email}
-                      </p>
-                      <span className="text-[10px] font-medium text-slate-500 dark:text-slate-500">
-                        Role: {account.roleTitle}
-                      </span>
-                    </div>
+                        </div>
 
-                    <ArrowRight size={15} className="shrink-0 text-slate-400 dark:text-slate-600" />
-                  </button>
-                ))}
-              </div>
+                        <ArrowRight
+                          size={15}
+                          className="shrink-0 text-slate-400 group-hover:text-brand-500 dark:text-slate-600 dark:group-hover:text-brand-400 transition-colors"
+                        />
+                      </button>
+
+                      {/* Remove from chooser button */}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveAccount(account.email)}
+                        title="Remove account from device"
+                        className="ml-2 rounded-lg p-1.5 text-slate-400 opacity-0 group-hover:opacity-100 hover:bg-slate-200/60 hover:text-rose-500 dark:hover:bg-white/10 dark:hover:text-rose-400 transition-all"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="my-5 rounded-xl border border-dashed border-slate-300 p-4 text-center dark:border-white/10">
+                  <p className="text-xs font-medium text-slate-700 dark:text-slate-300">
+                    No registered accounts stored on this device.
+                  </p>
+                  <p className="mt-0.5 text-[11px] text-slate-500">
+                    Enter your Google email below to sign in or register.
+                  </p>
+                </div>
+              )}
 
               {/* Use Another Account Button / Form */}
               <div className="mt-4">
@@ -296,18 +317,23 @@ export default function GoogleAuthButton({ text = 'Continue with Google', role =
                     <span>Use another Google account</span>
                   </button>
                 ) : (
-                  <form onSubmit={handleCustomSubmit} className="space-y-2.5 rounded-xl border border-slate-200 bg-slate-50/80 p-3.5 dark:border-white/10 dark:bg-white/[0.03]">
+                  <form
+                    onSubmit={handleCustomSubmit}
+                    className="space-y-2.5 rounded-xl border border-slate-200 bg-slate-50/80 p-3.5 dark:border-white/10 dark:bg-white/[0.03]"
+                  >
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-bold text-slate-900 dark:text-white">
                         Enter Google Account
                       </span>
-                      <button
-                        type="button"
-                        onClick={() => setShowAddCustom(false)}
-                        className="text-xs text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
-                      >
-                        Cancel
-                      </button>
+                      {registeredAccounts.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => setShowAddCustom(false)}
+                          className="text-xs text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-white"
+                        >
+                          Cancel
+                        </button>
+                      )}
                     </div>
                     <input
                       type="email"
@@ -321,7 +347,7 @@ export default function GoogleAuthButton({ text = 'Continue with Google', role =
                     <input
                       type="text"
                       className="input !py-2 !text-xs"
-                      placeholder="Your Full Name (e.g. John Doe)"
+                      placeholder="Your Full Name (e.g. Sathya Prasath)"
                       value={customName}
                       onChange={(e) => setCustomName(e.target.value)}
                     />
