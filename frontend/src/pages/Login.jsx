@@ -12,6 +12,7 @@ import {
   GitBranch,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import GoogleAuthButton from '../components/GoogleAuthButton';
 
 const ROLE_HINT = 'Sign in with your governance account';
 
@@ -57,7 +58,7 @@ const CAPABILITIES = [
 export default function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(() => localStorage.getItem('gov_last_email') || '');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
@@ -116,7 +117,24 @@ export default function Login() {
           <h1 className="text-xl font-bold text-slate-900 dark:text-white">Sign in</h1>
           <p className="mt-1 text-sm text-slate-600 dark:text-slate-400">AI Model Governance Platform</p>
           {error && <div className="alert-error mt-4">{error}</div>}
-          <form onSubmit={submit} className="mt-6 space-y-4">
+
+          {/* Google 1-Click Auth */}
+          <div className="mt-5">
+            <GoogleAuthButton
+              text="Continue with Google"
+              onSuccess={() => navigate('/')}
+              onError={(err) => setError(err)}
+            />
+          </div>
+
+          <div className="relative my-4 flex items-center justify-center">
+            <div className="w-full border-t border-slate-200 dark:border-white/10" />
+            <span className="absolute bg-white px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:bg-[#0c081e] dark:text-slate-400">
+              or sign in with email
+            </span>
+          </div>
+
+          <form onSubmit={submit} className="space-y-3.5">
             <input
               className="input"
               type="email"

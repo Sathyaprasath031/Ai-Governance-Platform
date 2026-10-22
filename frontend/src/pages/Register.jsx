@@ -11,6 +11,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import GoogleAuthButton from '../components/GoogleAuthButton';
 
 const ROLES = [
   {
@@ -100,7 +101,24 @@ export default function Register() {
 
           {error && <div className="alert-error mt-4">{error}</div>}
 
-          <form onSubmit={submit} className="mt-5 space-y-3.5">
+          {/* Google 1-Click Registration */}
+          <div className="mt-5">
+            <GoogleAuthButton
+              text="Sign up with Google"
+              role={form.role}
+              onSuccess={() => navigate('/')}
+              onError={(err) => setError(err)}
+            />
+          </div>
+
+          <div className="relative my-4 flex items-center justify-center">
+            <div className="w-full border-t border-slate-200 dark:border-white/10" />
+            <span className="absolute bg-white px-3 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:bg-[#0c081e] dark:text-slate-400">
+              or register with email
+            </span>
+          </div>
+
+          <form onSubmit={submit} className="space-y-3.5">
             <div>
               <label className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">Full Name</label>
               <input
